@@ -1,0 +1,27 @@
+{
+  "name": "my-pima-api",
+  "version": "1.0.0",
+  "description": "API to serve My PIMA app",
+  "main": "server.mjs",
+  "scripts": {
+    "dev": "nodemon server.mjs",
+    "start": "node server.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "PIMA",
+    "My",
+    "PIMA",
+    "technoServe"
+  ],
+  "author": "@julesntare",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "pg": "^8.11.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.31.1"
+  }
+}
