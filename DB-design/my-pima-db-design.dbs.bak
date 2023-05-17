@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="my-pima-db-design" id="Project-113c" database="PostgreSQL" >
+	<comment><![CDATA[Database Design for TechnoServe My PIMA project.]]></comment>
+	<schema name="my-pima-db-design" >
+		<table name="tbl_logins" >
+			<column name="login_id" type="uuid" jt="102" mandatory="y" />
+			<column name="user_id" type="uuid" jt="102" mandatory="y" />
+			<column name="last_login" type="date" jt="91" />
+			<column name="token" type="text" jt="12" mandatory="y" />
+			<index name="pk_tbl_logins" unique="PRIMARY_KEY" >
+				<column name="login_id" />
+			</index>
+			<fk name="fk_tbl_logins_tbl_users" to_schema="my-pima-db-design" to_table="tbl_users" >
+				<fk_column name="user_id" pk="user_id" />
+			</fk>
+		</table>
+		<table name="tbl_participants" >
+			<column name="part_id" type="uuid" jt="102" mandatory="y" />
+			<column name="project_id" type="uuid" jt="102" mandatory="y" />
+			<column name="user_id" type="uuid" jt="102" mandatory="y" />
+			<column name="role" type="varchar[]" jt="2003" />
+			<column name="assigned_date" type="date" jt="91" />
+			<column name="status" type="varchar" length="1" jt="12" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_participants" unique="PRIMARY_KEY" >
+				<column name="part_id" />
+			</index>
+			<fk name="fk_tbl_participants_tbl_users" to_schema="my-pima-db-design" to_table="tbl_users" >
+				<fk_column name="user_id" pk="user_id" />
+			</fk>
+			<fk name="fk_tbl_participants_tbl_projects" to_schema="my-pima-db-design" to_table="tbl_projects" >
+				<fk_column name="project_id" pk="project_id" />
+			</fk>
+			<fk name="fk_tbl_participants_tbl_project_roles" to_schema="my-pima-db-design" to_table="tbl_project_roles" >
+				<fk_column name="role" pk="pr_id" />
+			</fk>
+		</table>
+		<table name="tbl_permissions" >
+			<column name="perm_id" type="uuid" jt="102" mandatory="y" />
+			<column name="perm_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="perm_status" type="varchar[]" length="1" jt="2003" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_permissions" unique="PRIMARY_KEY" >
+				<column name="perm_id" />
+			</index>
+		</table>
+		<table name="tbl_project_roles" >
+			<column name="pr_id" type="uuid" jt="102" mandatory="y" />
+			<column name="pr_name" type="varchar" length="100" jt="12" />
+			<column name="description" type="text" jt="12" />
+			<column name="status" type="boolean" length="1" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_project_roles" unique="PRIMARY_KEY" >
+				<column name="pr_id" />
+			</index>
+		</table>
+		<table name="tbl_projects" >
+			<column name="project_id" type="uuid" jt="102" mandatory="y" />
+			<column name="org_project_id" type="varchar" length="255" jt="12" mandatory="y" />
+			<column name="project_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="project_descriptions" type="text" jt="12" />
+			<column name="start_date" type="date" jt="91" />
+			<column name="end_date" type="date" jt="91" />
+			<column name="project_status" type="varchar" length="20" jt="12" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_projects" unique="PRIMARY_KEY" >
+				<column name="project_id" />
+			</index>
+		</table>
+		<table name="tbl_roles" >
+			<column name="role_id" type="uuid" jt="102" mandatory="y" />
+			<column name="role_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="role_desc" type="varchar" length="100" jt="12" />
+			<column name="permissions" type="varchar[]" jt="2003" />
+			<column name="is_default" type="boolean" jt="16" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<column name="role_status" type="boolean" length="1" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_roles" unique="PRIMARY_KEY" >
+				<column name="role_id" />
+			</index>
+			<fk name="fk_tbl_roles_tbl_permissions" to_schema="my-pima-db-design" to_table="tbl_permissions" >
+				<fk_column name="permissions" pk="perm_id" />
+			</fk>
+			<fk name="fk_tbl_roles_tbl_users" to_schema="my-pima-db-design" to_table="tbl_users" >
+				<fk_column name="role_id" pk="role_id" />
+			</fk>
+		</table>
+		<table name="tbl_training_groups" >
+			<column name="tg_id" type="uuid" jt="102" mandatory="y" />
+			<column name="tg_name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="tg_description" type="text" jt="12" />
+			<column name="trainer" type="uuid" jt="102" mandatory="y" />
+			<column name="capacity" type="integer" jt="4" />
+			<column name="tg_status" type="varchar" length="30" jt="12" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_training_groups" unique="PRIMARY_KEY" >
+				<column name="tg_id" />
+			</index>
+			<fk name="fk_tbl_training_groups_tbl_users" to_schema="my-pima-db-design" to_table="tbl_users" >
+				<fk_column name="trainer" pk="user_id" />
+			</fk>
+		</table>
+		<table name="tbl_training_sessions" >
+			<column name="ts_id" type="uuid" jt="102" mandatory="y" />
+			<column name="session_name" type="varchar" length="100" jt="12" />
+			<column name="tg_id" type="uuid" jt="102" mandatory="y" />
+			<column name="location" type="text" jt="12" />
+			<column name="module_id" type="uuid" jt="102" />
+			<column name="total_male" type="integer" jt="4" />
+			<column name="total_female" type="integer" jt="4" />
+			<column name="ts_status" type="varchar" length="35" jt="12" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_tbl_training_sessions" unique="PRIMARY_KEY" >
+				<column name="ts_id" />
+			</index>
+			<fk name="fk_tbl_training_sessions_tbl_training_groups" to_schema="my-pima-db-design" to_table="tbl_training_groups" >
+				<fk_column name="tg_id" pk="tg_id" />
+			</fk>
+		</table>
+		<table name="tbl_users" prior="mp_users" >
+			<column name="user_id" type="uuid" jt="102" mandatory="y" />
+			<column name="username" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="user_password" type="varchar" length="100" jt="12" />
+			<column name="email" type="varchar" length="100" jt="12" />
+			<column name="mobile_no" type="varchar" length="100" jt="12" />
+			<column name="role_id" type="uuid" jt="102" mandatory="y" />
+			<column name="account_status" type="varchar" length="20" jt="12" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
+			<index name="pk_mp_users" unique="PRIMARY_KEY" >
+				<column name="user_id" />
+			</index>
+			<index name="unq_tbl_users_role_id" unique="UNIQUE_KEY" >
+				<column name="role_id" />
+			</index>
+		</table>
+		<table name="tbl_verifications" >
+			<column name="verify_id" type="uuid" jt="102" mandatory="y" />
+			<column name="user_id" type="uuid" jt="102" mandatory="y" />
+			<column name="verification_code" type="integer" jt="4" />
+			<column name="expiry_time" type="timestamp" jt="93" />
+			<column name="is_verified" type="boolean" jt="16" >
+				<defo><![CDATA[false]]></defo>
+			</column>
+			<index name="pk_tbl_verifications" unique="PRIMARY_KEY" >
+				<column name="verify_id" />
+			</index>
+			<fk name="fk_tbl_verifications_tbl_users" to_schema="my-pima-db-design" to_table="tbl_users" >
+				<fk_column name="user_id" pk="user_id" />
+			</fk>
+		</table>
+	</schema>
+	<connector name="MyDb" database="MySql" host="localhost" port="3306" user="root" useSystemProxy="false" />
+	<layout name="Default Layout" id="Layout-cb9" show_relation="columns" >
+		<entity schema="my-pima-db-design" name="tbl_logins" color="C1D8EE" x="240" y="80" />
+		<entity schema="my-pima-db-design" name="tbl_participants" color="C1D8EE" x="656" y="512" />
+		<entity schema="my-pima-db-design" name="tbl_permissions" color="C1D8EE" x="48" y="80" />
+		<entity schema="my-pima-db-design" name="tbl_project_roles" color="C1D8EE" x="928" y="512" />
+		<entity schema="my-pima-db-design" name="tbl_projects" color="C1D8EE" x="896" y="256" />
+		<entity schema="my-pima-db-design" name="tbl_roles" color="C1D8EE" x="80" y="496" />
+		<entity schema="my-pima-db-design" name="tbl_training_groups" color="C1D8EE" x="912" y="48" />
+		<entity schema="my-pima-db-design" name="tbl_training_sessions" color="C1D8EE" x="464" y="48" />
+		<entity schema="my-pima-db-design" name="tbl_users" color="C1D8EE" x="480" y="272" />
+		<entity schema="my-pima-db-design" name="tbl_verifications" color="C1D8EE" x="368" y="512" />
+	</layout>
+</project>
