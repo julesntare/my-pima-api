@@ -7,6 +7,9 @@
 			<column name="user_id" type="uuid" jt="102" mandatory="y" />
 			<column name="last_login" type="date" jt="91" />
 			<column name="token" type="text" jt="12" mandatory="y" />
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
+			</column>
 			<index name="pk_tbl_logins" unique="PRIMARY_KEY" >
 				<column name="login_id" />
 			</index>
@@ -19,7 +22,7 @@
 			<column name="project_id" type="uuid" jt="102" mandatory="y" />
 			<column name="user_id" type="uuid" jt="102" mandatory="y" />
 			<column name="role" type="varchar[]" jt="2003" />
-			<column name="assigned_date" type="date" jt="91" />
+			<column name="joined_on" prior="assigned_date" type="date" jt="91" />
 			<column name="status" type="varchar" length="1" jt="12" />
 			<column name="added_on" type="date" jt="91" >
 				<defo><![CDATA[CURRENT_DATE]]></defo>
@@ -120,7 +123,7 @@
 		</table>
 		<table name="tbl_training_sessions" >
 			<column name="ts_id" type="uuid" jt="102" mandatory="y" />
-			<column name="session_name" type="varchar" length="100" jt="12" />
+			<column name="ts_name" prior="session_name" type="varchar" length="100" jt="12" />
 			<column name="tg_id" type="uuid" jt="102" mandatory="y" />
 			<column name="location" type="text" jt="12" />
 			<column name="module_id" type="uuid" jt="102" />
@@ -162,6 +165,9 @@
 			<column name="expiry_time" type="timestamp" jt="93" />
 			<column name="is_verified" type="boolean" jt="16" >
 				<defo><![CDATA[false]]></defo>
+			</column>
+			<column name="added_on" type="date" jt="91" >
+				<defo><![CDATA[CURRENT_DATE]]></defo>
 			</column>
 			<index name="pk_tbl_verifications" unique="PRIMARY_KEY" >
 				<column name="verify_id" />
