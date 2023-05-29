@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Ju.jo.123.pg",
+    "database": "my-pima-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "Ju.jo.123.pg",
+    "database": "my-pima-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "Ju.jo.123.pg",
+    "database": "my-pima-db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
