@@ -6,7 +6,7 @@ const LoginsTypeDefs = gql`
     user_id: Int
     session_token: String
     provider: String
-    createdAt: String
+    added_on: String
   }
 
   type Query {

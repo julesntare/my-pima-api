@@ -27,11 +27,10 @@ const usersTypeDefs = gql`
 
   type Mutation {
     addUser(
-      user_name: String!
       user_email: String!
       mobile_no: String!
-      role_id: ID!
       user_password: String!
+      role_id: ID
     ): UserResponse
 
     updateUser(

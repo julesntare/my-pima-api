@@ -53,6 +53,48 @@ conn.login(
   }
 );
 
+app.get("/api/sf/tg", (req, res) => {
+  conn.query(
+    "SELECT Id, Name,TNS_Id__c, Active_Participants_Count__c, PIMA_ID__c, Responsible_Staff__c FROM Training_Group__c",
+    function (err, result) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log("total : " + result.totalSize);
+      console.log("fetched : " + result.records.length);
+      res.send(result);
+    }
+  );
+});
+
+app.get("/api/sf/ts", (req, res) => {
+  conn.query(
+    "SELECT Id, Name, Module_Name__c, Training_Group__c, CommCare_Case_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__c  FROM Training_Session__c",
+    function (err, result) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log("total : " + result.totalSize);
+      console.log("fetched : " + result.records.length);
+      res.send(result);
+    }
+  );
+});
+
+app.get("/api/sf/tp", (req, res) => {
+  conn.query(
+    "SELECT Id, Name, Training_Session__c, Participant_Gender__c, Status__c, Participant__c FROM Attendance__c",
+    function (err, result) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log("total : " + result.totalSize);
+      console.log("fetched : " + result.records.length);
+      res.send(result);
+    }
+  );
+});
+
 const server = new ApolloServer({
   typeDefs: [
     PermissionsTypeDefs,

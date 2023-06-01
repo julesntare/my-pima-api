@@ -2,6 +2,8 @@ import { OAuth2Client } from "google-auth-library";
 import UserSessions from "../models/user_sessions.model.mjs";
 import Users from "../models/users.model.mjs";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -33,13 +35,12 @@ const LoginsResolvers = {
 
   Mutation: {
     saveGoogleLogin: async (_, { token }) => {
-      const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.GOOGLE_AUTH_CLIENT_ID,
-      });
-      console.log(ticket);
-
       try {
+        const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: process.env.GOOGLE_AUTH_CLIENT_ID,
+        });
+
         const payload = ticket.getPayload();
         const googleEmail = payload.email;
 
@@ -50,6 +51,11 @@ const LoginsResolvers = {
         });
 
         if (user) {
+          await UserSessions.create({
+            user_id: user.user_id,
+            session_token: token,
+          });
+
           return {
             message: "Authenticated Successful!",
             status: 200,
@@ -66,7 +72,7 @@ const LoginsResolvers = {
 
         return {
           message: err.message,
-          status: err.status,
+          status: 500,
         };
       }
     },
@@ -87,7 +93,7 @@ const LoginsResolvers = {
 
       if (!validPassword) {
         return {
-          message: "Password is incorrect",
+          message: "Incorrect Credentials",
           status: 401,
         };
       }
@@ -100,14 +106,14 @@ const LoginsResolvers = {
 
       const login = await UserSessions.create({
         user_id: user.user_id,
-        token,
+        session_token: token,
         provider: "tns",
       });
 
       return {
         message: "Login added successfully",
         status: 200,
-        login,
+        token,
       };
     },
   },

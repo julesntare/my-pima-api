@@ -1,5 +1,6 @@
 import Roles from "../models/roles.model.mjs";
 import Users from "../models/users.model.mjs";
+import bcrypt from "bcrypt";
 
 const UsersResolvers = {
   Query: {
@@ -23,10 +24,11 @@ const UsersResolvers = {
           });
           if (!user) {
             total_new_users += 1;
+            const hashed_password = await bcrypt.hash("MP@1234", 10); // default password for all users "MP@1234
             await Users.create({
               sf_user_id: record.Id,
               user_name: record.Username,
-              user_password: "MP@1234", // default password for all users "MP@1234
+              user_password: hashed_password, // default password for all users "MP@1234
               user_email: record.Username,
               mobile_no: "N/A",
               role_id: default_role.role_id,
@@ -74,6 +76,67 @@ const UsersResolvers = {
         };
       } catch (err) {
         console.log(err);
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
+  },
+
+  Mutation: {
+    addUser: async (_, { user_email, mobile_no, user_password, role_id }) => {
+      // check if user already exists
+      const user = await Users.findOne({
+        where: { user_email },
+      });
+
+      if (user) {
+        return {
+          message: "User already exists",
+          status: 400,
+        };
+      }
+
+      // if role_id not provided, fetch default role id from db
+      if (!role_id) {
+        const default_role = await Roles.findOne({
+          where: { is_default: true },
+        });
+        role_id = default_role.role_id;
+      }
+
+      // check if role exists
+      const role = await Roles.findOne({
+        where: { role_id },
+      });
+
+      if (!role) {
+        return {
+          message: "Role does not exist",
+          status: 400,
+        };
+      }
+
+      try {
+        // hash password
+        user_password = await bcrypt.hash(user_password, 10);
+
+        const userCreated = await Users.create({
+          user_name: user_email,
+          user_email,
+          mobile_no,
+          user_password,
+          role_id,
+        });
+
+        return {
+          message: "User added successfully",
+          status: 200,
+          user: userCreated,
+        };
+      } catch (err) {
+        console.error(err);
         return {
           message: err.message,
           status: err.status,
