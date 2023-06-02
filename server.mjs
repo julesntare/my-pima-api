@@ -12,6 +12,8 @@ import RolesTypeDefs from "./src/typeDefs/roles.typeDefs.mjs";
 import RolesResolvers from "./src/resolvers/roles.resolvers.mjs";
 import usersTypeDefs from "./src/typeDefs/users.typeDefs.mjs";
 import UsersResolvers from "./src/resolvers/users.resolvers.mjs";
+import cron from "cron";
+import loadSFProjects from "./src/reusables/load_projects.mjs";
 
 const app = express();
 
@@ -121,6 +123,14 @@ server
   .start()
   .then(() => {
     server.applyMiddleware({ app });
+
+    // Define a cron job to fetch data from the remote database and update the local database
+    const fetchDataJob = new cron.CronJob("0 0 */24 * * *", async () => {
+      await loadSFProjects(conn);
+    });
+
+    // Start the cron job
+    fetchDataJob.start();
 
     app.listen({ port: PORT }, () => {
       console.log(
