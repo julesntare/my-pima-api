@@ -21,6 +21,18 @@ import {
   cacheTrainingParticipants,
   cacheTrainingSessions,
 } from "./src/utils/saveTrainingsCache.mjs";
+import TrainingAggregatesTypeDefs from "./src/typeDefs/training_aggregates.typeDefs.mjs";
+import TrainingAggregateResolvers from "./src/resolvers/training_aggregates.resolvers.mjs";
+
+// Define the SOQL queries
+const soqlQueries = {
+  trainingGroups:
+    "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__c FROM Training_Group__c",
+  trainingSessions:
+    "SELECT Id, Name, Module_Name__c, Training_Group__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__c FROM Training_Session__c",
+  trainingParticipants:
+    "SELECT Id, Participant_Full_Name__c, Phone_Number__c, Gender__c, Location__c, TNS_Id__c, Training_Group__c, Status__c, Trainer_Name__c, Farm_Size__c FROM Participant__c",
+};
 
 const app = express();
 
@@ -108,7 +120,7 @@ app.get("/api/sf/ts", (req, res) => {
 
 app.get("/api/sf/tp", (req, res) => {
   conn.query(
-    "SELECT Id, Name, Training_Session__c, Participant_Gender__c, Status__c FROM Attendance__c",
+    "SELECT Id, Participant_Full_Name__c, Phone_Number__c, Gender__c, Location__c,	TNS_Id__c, Training_Group__c, Status__c, Trainer_Name__c, Farm_Size__c FROM Participant__c",
     function (err, result) {
       if (err) {
         return console.error(err);
@@ -127,6 +139,7 @@ const server = new ApolloServer({
     usersTypeDefs,
     ProjectsTypeDefs,
     LoginsTypeDefs,
+    TrainingAggregatesTypeDefs,
   ],
   resolvers: [
     PermissionsResolvers,
@@ -134,6 +147,7 @@ const server = new ApolloServer({
     UsersResolvers,
     ProjectsResolvers,
     LoginsResolvers,
+    TrainingAggregateResolvers,
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
   context: ({ req }) => {
@@ -172,7 +186,7 @@ server
         }
       );
       conn.query(
-        "SELECT Id, Name, Training_Session__c, Participant_Gender__c, Status__c FROM Attendance__c",
+        "SELECT Id, Name, Farm_Visit__c, Participant__c, Participant_Gender__c, Status__c,	Training_Session__c, Date__c FROM FV_Attendance__c",
         function (err, result) {
           if (err) {
             return console.error(err);

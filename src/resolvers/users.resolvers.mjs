@@ -82,6 +82,33 @@ const UsersResolvers = {
         };
       }
     },
+
+    getUserById: async (_, { user_id }) => {
+      try {
+        const user = await Users.findOne({
+          where: { sf_user_id: user_id },
+        });
+
+        if (!user) {
+          return {
+            message: "User not found",
+            status: 404,
+          };
+        }
+
+        return {
+          message: "User fetched successfully",
+          status: 200,
+          user,
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
   },
 
   Mutation: {
