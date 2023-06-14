@@ -11,10 +11,11 @@ const TrainingSessionsTypeDefs = gql`
         total_females: Int!
     }
 
-    query TrainingSessions {
+    type Query {
         trainingSessions: AllTrainingSessionsResponse
         trainingSession(ts_id: ID!): TrainingSessionResponse
         trainingSessionsByGroup(ts_group: String!): AllTrainingSessionsResponse
+        trainingSessionStatistics(ts_id: ID!): TrainingSessionStatisticsResponse
     }
 
     type AllTrainingSessionsResponse {
@@ -27,6 +28,18 @@ const TrainingSessionsTypeDefs = gql`
         message: String!
         status: Int!
         trainingSession: TrainingSession
+    }
+
+    type TrainingSessionStatisticsResponse {
+        message: String!
+        status: Int!
+        statistics: TrainingSessionStatistics
+    }
+
+    type TrainingSessionStatistics {
+        male_attendance: Int
+        female_attendance: Int
+        total_attendance: Int
     }
 `;
 

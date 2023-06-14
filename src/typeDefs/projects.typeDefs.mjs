@@ -11,8 +11,12 @@ const ProjectsTypeDefs = gql`
   }
 
   type Query {
-    getProjects: ProjectsResponse
     loadProjects: LoadProjectsResponse
+    getProjects: ProjectsResponse
+    getProjectById(project_id: ID!): ProjectResponse
+    getProjectBusinessAdvisors(project_id: ID!): PRResponse
+    getProjectFarmerTrainers(project_id: ID!): PRResponse
+    getProjectStatistics(sf_project_id: ID!): ProjectStatisticsResponse
   }
 
   type ProjectsResponse {
@@ -25,6 +29,35 @@ const ProjectsTypeDefs = gql`
     message: String!
     status: Int!
     total_new_projects: Int
+  }
+
+  type ProjectResponse {
+    message: String!
+    status: Int!
+    project: Projects
+  }
+
+  type PRResponse {
+    message: String!
+    status: Int!
+    leaders: [ProjectLeaders]
+  }
+
+  type ProjectLeaders {
+    name: String
+  }
+
+  type ProjectStatisticsResponse {
+    message: String!
+    status: Int!
+    statistics: ProjectStatistics
+  }
+
+  type ProjectStatistics {
+    total_groups: Int
+    total_participants: Int
+    total_bas: Int
+    total_fts: Int
   }
 `;
 

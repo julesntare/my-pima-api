@@ -17,6 +17,7 @@ const usersTypeDefs = gql`
     loadSFUsers: LoadUsersResponse
     getUsers: UsersResponse
     getUserById(user_id: ID!): UserResponse
+    getUserBySFId(sf_user_id: String!): UserResponse
   }
 
   type LoadUsersResponse {
@@ -27,6 +28,7 @@ const usersTypeDefs = gql`
 
   type Mutation {
     addUser(
+      user_name: String!
       user_email: String!
       mobile_no: String!
       user_password: String!

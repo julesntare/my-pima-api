@@ -2,8 +2,8 @@ import { gql } from "apollo-server-express";
 
 const LoginsTypeDefs = gql`
   type Login {
-    session_id: Int
-    user_id: Int
+    session_id: String
+    user_id: String
     session_token: String
     provider: String
     added_on: String

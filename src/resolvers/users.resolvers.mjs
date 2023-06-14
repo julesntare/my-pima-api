@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Roles from "../models/roles.model.mjs";
 import Users from "../models/users.model.mjs";
 import bcrypt from "bcrypt";
@@ -15,7 +16,7 @@ const UsersResolvers = {
 
       try {
         records = await sf_conn.query(
-          "SELECT Id, Username, SenderEmail, Phone, IsActive FROM User"
+          "SELECT Id, Name, Email, Phone, contact_status__c FROM Contact"
         );
 
         const promises = records.records.map(async (record) => {
@@ -27,20 +28,22 @@ const UsersResolvers = {
             const hashed_password = await bcrypt.hash("MP@1234", 10); // default password for all users "MP@1234
             await Users.create({
               sf_user_id: record.Id,
-              user_name: record.Username,
+              user_name: record.Name,
               user_password: hashed_password, // default password for all users "MP@1234
-              user_email: record.Username,
-              mobile_no: "N/A",
+              user_email: record.Email,
+              mobile_no: record.Phone,
               role_id: default_role.role_id,
-              account_status: record.IsActive ? "active" : "inactive",
+              account_status:
+                record.contact_status__c === "Active" ? "active" : "inactive",
             });
           } else {
             await Users.update(
               {
-                user_name: record.Username,
-                user_email: record.Username,
-                mobile_no: "N/A",
-                account_status: record.IsActive ? "active" : "inactive",
+                user_name: record.Name,
+                user_email: record.Email,
+                mobile_no: record.Phone,
+                account_status:
+                  record.contact_status__c === "Active" ? "active" : "inactive",
               },
               {
                 where: { sf_user_id: record.Id },
@@ -86,7 +89,34 @@ const UsersResolvers = {
     getUserById: async (_, { user_id }) => {
       try {
         const user = await Users.findOne({
-          where: { sf_user_id: user_id },
+          where: { user_id },
+        });
+
+        if (!user) {
+          return {
+            message: "User not found",
+            status: 404,
+          };
+        }
+
+        return {
+          message: "User fetched successfully",
+          status: 200,
+          user,
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
+
+    getUserBySFId: async (_, { sf_user_id }) => {
+      try {
+        const user = await Users.findOne({
+          where: { sf_user_id },
         });
 
         if (!user) {
@@ -112,10 +142,15 @@ const UsersResolvers = {
   },
 
   Mutation: {
-    addUser: async (_, { user_email, mobile_no, user_password, role_id }) => {
-      // check if user already exists
+    addUser: async (
+      _,
+      { user_name, user_email, mobile_no, user_password, role_id }
+    ) => {
+      // check if user email or mobile no already exists
       const user = await Users.findOne({
-        where: { user_email },
+        where: {
+          [Op.or]: [{ user_email }, { mobile_no }],
+        },
       });
 
       if (user) {
@@ -150,7 +185,7 @@ const UsersResolvers = {
         user_password = await bcrypt.hash(user_password, 10);
 
         const userCreated = await Users.create({
-          user_name: user_email,
+          user_name,
           user_email,
           mobile_no,
           user_password,

@@ -14,7 +14,7 @@ const Users = sequelize.define("tbl_users", {
   },
   user_name: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: true,
   },
   user_password: {
     type: DataTypes.STRING(255),
@@ -22,11 +22,11 @@ const Users = sequelize.define("tbl_users", {
   },
   user_email: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: true,
   },
   mobile_no: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: true,
   },
   role_id: {
     type: DataTypes.UUID,
