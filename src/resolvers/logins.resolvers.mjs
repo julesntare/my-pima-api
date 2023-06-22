@@ -116,6 +116,36 @@ const LoginsResolvers = {
         token,
       };
     },
+
+    verifyToken: async (_, { token }) => {
+      try {
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+        console.log(decoded);
+
+        const userSession = await UserSessions.findOne({
+          where: { session_token: token },
+        });
+
+        if (!userSession) {
+          return {
+            message: "Invalid token",
+            status: 401,
+          };
+        }
+
+        return {
+          message: "Valid token",
+          status: 200,
+        };
+      } catch (err) {
+        console.log(err);
+
+        return {
+          message: err.message,
+          status: 500,
+        };
+      }
+    },
   },
 };
 
