@@ -16,12 +16,18 @@ const LoginsTypeDefs = gql`
   type Mutation {
     saveGoogleLogin(token: String!): AddLoginResponse
     saveMailLogin(email: String!, password: String!): AddLoginResponse
+    verifyToken(token: String!): verifyResponse
   }
 
   type LoginsResponse {
     message: String
     status: Int
     logins: [Login]
+  }
+
+  type verifyResponse {
+    message: String
+    status: Int
   }
 
   type AddLoginResponse {
