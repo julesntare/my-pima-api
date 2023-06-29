@@ -13,6 +13,7 @@ import RolesResolvers from "./src/resolvers/roles.resolvers.mjs";
 import usersTypeDefs from "./src/typeDefs/users.typeDefs.mjs";
 import UsersResolvers from "./src/resolvers/users.resolvers.mjs";
 import cron from "cron";
+import cors from "cors";
 import loadSFProjects from "./src/reusables/load_projects.mjs";
 import Redis from "ioredis";
 import { RedisPubSub } from "graphql-redis-subscriptions";
@@ -225,16 +226,22 @@ const server = new ApolloServer({
     TrainingSessionsResolvers,
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
+  csrfPrevention: true,
+  cache: "bounded",
   context: ({ req }) => {
     return {
       sf_conn: conn,
     };
   },
+  introspection: true,
+  playground: true,
 });
 
 server
   .start()
   .then(() => {
+    app.use(cors());
+
     server.applyMiddleware({ app });
 
     // Define a cron job to fetch data from the remote database and update the local database

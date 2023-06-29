@@ -51,15 +51,21 @@ const LoginsResolvers = {
         });
 
         if (user) {
+          // create session
+          const jwt_token = jwt.sign(
+            { user_id: user.user_id },
+            process.env.TOKEN_SECRET
+          );
+
           await UserSessions.create({
             user_id: user.user_id,
-            session_token: token,
+            session_token: jwt_token,
           });
 
           return {
             message: "Authenticated Successful!",
             status: 200,
-            token,
+            token: jwt_token,
           };
         }
 
@@ -104,7 +110,7 @@ const LoginsResolvers = {
         process.env.TOKEN_SECRET
       );
 
-      const login = await UserSessions.create({
+      await UserSessions.create({
         user_id: user.user_id,
         session_token: token,
         provider: "tns",
