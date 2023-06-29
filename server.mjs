@@ -24,6 +24,8 @@ import {
 } from "./src/utils/saveTrainingsCache.mjs";
 import TrainingSessionsTypeDefs from "./src/typeDefs/training_sessions.typeDefs.mjs";
 import TrainingSessionsResolvers from "./src/resolvers/training_sessions.resolvers.mjs";
+import TrainingGroupsTypeDefs from "./src/typeDefs/training_groups.typeDefs.mjs";
+import TrainingGroupsResolvers from "./src/resolvers/training_groups.resolvers.mjs";
 
 const app = express();
 
@@ -80,67 +82,6 @@ conn.login(
     console.log("Salesforce : JSForce Connection is established!");
   }
 );
-
-app.get("/api/sf/tg", async (req, res) => {
-  conn.query(
-    "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active'",
-    async function (err, result) {
-      const business_advisors = [];
-
-      if (err) {
-        console.error(err);
-
-        return err;
-      }
-
-      const projectIds = result.records.map((record) => record.Project__c);
-
-      // return unique project ids
-      const uniqueProjectIds = [...new Set(projectIds)];
-
-      await conn.query(
-        `SELECT Staff__r.Name, Project__c FROM Project_Role__c WHERE Roles_Status__c = 'Active' AND Role__c = 'Business Advisor' AND Project__c IN ('${uniqueProjectIds.join(
-          "','"
-        )}')`,
-        function (err, result2) {
-          if (err) {
-            console.error(err);
-
-            return err;
-          }
-
-          result2.records.forEach((record) => {
-            business_advisors.push({
-              project_id: record.Project__c,
-              business_advisor: record.Staff__r.Name,
-            });
-          });
-        }
-      );
-
-      return res.json({
-        message: "Training groups fetched successfully",
-        status: 200,
-        totalSize: result.totalSize,
-        trainingGroups: result.records.map((record) => {
-          return {
-            tg_id: record.Id,
-            tg_name: record.Name,
-            tns_id: record.TNS_Id__c,
-            active_participants_count: record.Active_Participants_Count__c,
-            project_id: record.Project__c,
-            business_advisor: business_advisors
-              ? business_advisors
-                  .filter((advisor) => advisor.project_id === record.Project__c)
-                  .map((advisor) => advisor.business_advisor)
-              : [],
-            farmer_trainer: record.Responsible_Staff__r.Name,
-          };
-        }),
-      });
-    }
-  );
-});
 
 app.get("/api/sf/ts", (req, res) => {
   conn.query(
@@ -215,6 +156,7 @@ const server = new ApolloServer({
     usersTypeDefs,
     ProjectsTypeDefs,
     LoginsTypeDefs,
+    TrainingGroupsTypeDefs,
     TrainingSessionsTypeDefs,
   ],
   resolvers: [
@@ -223,6 +165,7 @@ const server = new ApolloServer({
     UsersResolvers,
     ProjectsResolvers,
     LoginsResolvers,
+    TrainingGroupsResolvers,
     TrainingSessionsResolvers,
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
