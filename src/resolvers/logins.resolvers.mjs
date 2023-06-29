@@ -65,6 +65,11 @@ const LoginsResolvers = {
           return {
             message: "Authenticated Successful!",
             status: 200,
+            user: {
+              user_id: user.user_id,
+              user_name: user.user_name,
+              user_email: user.user_email,
+            },
             token: jwt_token,
           };
         }
@@ -119,6 +124,11 @@ const LoginsResolvers = {
       return {
         message: "Login added successfully",
         status: 200,
+        user: {
+          user_id: user.user_id,
+          user_name: user.user_name,
+          user_email: user.user_email,
+        },
         token,
       };
     },

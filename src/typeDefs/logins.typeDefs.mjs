@@ -31,8 +31,9 @@ const LoginsTypeDefs = gql`
   }
 
   type AddLoginResponse {
-    message: String
-    status: Int
+    message: String!
+    status: Int!
+    user: User
     token: String
   }
 `;
