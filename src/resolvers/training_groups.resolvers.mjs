@@ -38,6 +38,26 @@ const TrainingGroupsResolvers = {
               }
             );
 
+            // get total participants from Participant__c where Training_Group__c = result.records[0].Id
+            if (result.records.length > 0) {
+              await sf_conn.query(
+                `SELECT COUNT(Id) FROM Participant__c WHERE Training_Group__c = '${result.records[0].Id}'`,
+                async function (err, result3) {
+                  if (err) {
+                    console.error(err);
+
+                    return {
+                      message: err.message,
+                      status: 500,
+                    };
+                  }
+
+                  result.records[0].Active_Participants_Count__c =
+                    result3.records[0].expr0;
+                }
+              );
+            }
+
             return result;
           }
         );
@@ -50,7 +70,7 @@ const TrainingGroupsResolvers = {
               tg_id: record.Id,
               tg_name: record.Name,
               tns_id: record.TNS_Id__c,
-              total_participants: record.Active_Participants_Count__c,
+              total_participants: record.Active_Participants_Count__c || 0,
               business_advisor: business_advisors
                 ? business_advisors
                     .filter(
