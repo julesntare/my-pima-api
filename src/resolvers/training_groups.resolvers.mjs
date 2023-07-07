@@ -6,7 +6,7 @@ const TrainingGroupsResolvers = {
         const result = await sf_conn.query(
           "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active' AND Project__c = '" +
             project_id +
-            "'",
+            "' AND Group_Status__c = 'Active'",
           async function (err, result) {
             if (err) {
               console.error(err);

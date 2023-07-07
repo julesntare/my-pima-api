@@ -146,6 +146,8 @@ const ProjectsResolvers = {
           `SELECT COUNT(Id) FROM Training_Group__c WHERE Project__c = '${sf_project_id}' AND Group_Status__c='Active'`
         );
 
+        console.log(total_groups.records);
+
         // get total participants
         // const total_participants = await sf_conn.query(
         //   `SELECT COUNT() FROM Participant__c WHERE Project__r.Id = '${sf_project_id}'`
