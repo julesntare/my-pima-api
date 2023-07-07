@@ -29,6 +29,19 @@ import TrainingGroupsResolvers from "./src/resolvers/training_groups.resolvers.m
 
 const app = express();
 
+app.use(cors());
+
+app.use(express.json());
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 const redis = new Redis({
   host: "redis-12533.c15.us-east-1-2.ec2.cloud.redislabs.com",
   port: 12533,
@@ -183,8 +196,6 @@ const server = new ApolloServer({
 server
   .start()
   .then(() => {
-    app.use(cors());
-
     server.applyMiddleware({ app });
 
     // Define a cron job to fetch data from the remote database and update the local database
