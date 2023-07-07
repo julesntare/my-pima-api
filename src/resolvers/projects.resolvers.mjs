@@ -146,14 +146,19 @@ const ProjectsResolvers = {
           `SELECT COUNT(Id) FROM Training_Group__c WHERE Project__c = '${sf_project_id}' AND Group_Status__c='Active'`
         );
 
-        console.log(total_groups.records);
-
-        // get total participants
-        // const total_participants = await sf_conn.query(
-        //   `SELECT COUNT() FROM Participant__c WHERE Project__r.Id = '${sf_project_id}'`
-        // );
-
         // get total bas
+        if (total_groups.records[0].expr0 === 0) {
+          return {
+            message: "Project Statistics fetched successfully",
+            status: 200,
+            statistics: {
+              total_groups: 0,
+              total_bas: 0,
+              total_fts: 0,
+            },
+          };
+        }
+
         const total_bas = await sf_conn.query(
           `SELECT COUNT(Id) FROM Project_Role__c WHERE Roles_Status__c = 'Active' AND Role__c = 'Business Advisor'
           AND Project__c = '${sf_project_id}'`
@@ -170,7 +175,6 @@ const ProjectsResolvers = {
           status: 200,
           statistics: {
             total_groups: total_groups.records[0].expr0,
-            // total_participants: total_participants.records[0].expr0,
             total_bas: total_bas.records[0].expr0,
             total_fts: total_fts.records[0].expr0,
           },
