@@ -1,7 +1,7 @@
 const TrainingGroupsResolvers = {
   Query: {
     trainingGroupsByProject: async (_, { project_id }, { sf_conn }) => {
-      const business_advisor = null;
+      let business_advisor = null;
       try {
         const result = await sf_conn.query(
           "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Responsible_Staff__r.ReportsToId, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active' AND Project__c = '" +
