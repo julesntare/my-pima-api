@@ -1,9 +1,8 @@
 const TrainingGroupsResolvers = {
   Query: {
     trainingGroupsByProject: async (_, { project_id }, { sf_conn }) => {
-      const business_advisor = null;
       try {
-        const result = await sf_conn.query(
+        const res = await sf_conn.query(
           "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Responsible_Staff__r.ReportsToId, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active' AND Project__c = '" +
             project_id +
             "' AND Group_Status__c = 'Active'",
@@ -17,7 +16,7 @@ const TrainingGroupsResolvers = {
               };
             }
 
-            await sf_conn.query(
+            const ba_result = await sf_conn.query(
               `SELECT Name FROM Contact WHERE Id = '${result.records[0].Responsible_Staff__r.ReportsToId}'`,
               async function (err, result2) {
                 if (err) {
@@ -29,7 +28,7 @@ const TrainingGroupsResolvers = {
                   };
                 }
 
-                business_advisor = result2.records[0].Name;
+                return result2;
               }
             );
 
@@ -53,26 +52,27 @@ const TrainingGroupsResolvers = {
               );
             }
 
-            return result;
+            return result.records.map((record) => {
+              return {
+                tg_id: record.Id,
+                tg_name: record.Name,
+                tns_id: record.TNS_Id__c,
+                total_participants: record.Active_Participants_Count__c || 0,
+                business_advisor: ba_result.records[0].Name,
+                farmer_trainer: record.Responsible_Staff__r.Name,
+              };
+            });
           }
         );
 
         return {
           message: "Training groups fetched successfully",
           status: 200,
-          trainingGroups: result.records.map((record) => {
-            return {
-              tg_id: record.Id,
-              tg_name: record.Name,
-              tns_id: record.TNS_Id__c,
-              total_participants: record.Active_Participants_Count__c || 0,
-              business_advisor,
-              farmer_trainer: record.Responsible_Staff__r.Name,
-            };
-          }),
+          trainingGroups: res,
         };
       } catch (err) {
         console.log(err);
+
         return {
           message: err.message,
           status: err.status,
