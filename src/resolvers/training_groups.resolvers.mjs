@@ -16,22 +16,6 @@ const TrainingGroupsResolvers = {
               };
             }
 
-            const ba_result = await sf_conn.query(
-              `SELECT Name FROM Contact WHERE Id = '${result.records[0].Responsible_Staff__r.ReportsToId}'`,
-              async function (err, result2) {
-                if (err) {
-                  console.error(err);
-
-                  return {
-                    message: err.message,
-                    status: 500,
-                  };
-                }
-
-                return result2;
-              }
-            );
-
             // get total participants from Participant__c where Training_Group__c = result.records[0].Id
             if (result.records.length > 0) {
               await sf_conn.query(
@@ -52,23 +36,53 @@ const TrainingGroupsResolvers = {
               );
             }
 
-            return result.records.map((record) => {
+            return result;
+          }
+        );
+
+        // get distinct reportsToId from res
+        const reportsToIds = [
+          ...new Set(
+            res.records.map((item) => item.Responsible_Staff__r.ReportsToId)
+          ),
+        ];
+
+        // do a query to get the names of the reportsToIds from Contact
+        const res2 = await sf_conn.query(
+          `SELECT Id, Name FROM Contact WHERE Id IN ('${reportsToIds.join(
+            "','"
+          )}')`,
+          async function (err, result) {
+            if (err) {
+              console.error(err);
+
               return {
-                tg_id: record.Id,
-                tg_name: record.Name,
-                tns_id: record.TNS_Id__c,
-                total_participants: record.Active_Participants_Count__c || 0,
-                business_advisor: ba_result.records[0].Name,
-                farmer_trainer: record.Responsible_Staff__r.Name,
+                message: err.message,
+                status: 500,
               };
-            });
+            }
+
+            return result;
           }
         );
 
         return {
-          message: "Training groups fetched successfully",
+          message: "Training Groups fetched successfully",
           status: 200,
-          trainingGroups: res,
+          trainingGroups:
+            res.records.map((item) => {
+              return {
+                tg_id: item.Id,
+                tg_name: item.Name,
+                tns_id: item.TNS_Id__c,
+                total_participants: item.Active_Participants_Count__c,
+                farmer_trainer: item.Responsible_Staff__r.Name,
+                business_advisor: res2.records.find(
+                  (contact) =>
+                    contact.Id === item.Responsible_Staff__r.ReportsToId
+                ).Name,
+              };
+            }) || [],
         };
       } catch (err) {
         console.log(err);
