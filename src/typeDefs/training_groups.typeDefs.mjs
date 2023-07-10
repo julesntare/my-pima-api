@@ -7,7 +7,7 @@ const TrainingGroupsTypeDefs = gql`
     tns_id: String
     total_participants: Int
     farmer_trainer: String!
-    business_advisor: [String!]
+    business_advisor: String
   }
 
   type Query {

@@ -1,10 +1,10 @@
 const TrainingGroupsResolvers = {
   Query: {
     trainingGroupsByProject: async (_, { project_id }, { sf_conn }) => {
-      const business_advisors = [];
+      const business_advisor = null;
       try {
         const result = await sf_conn.query(
-          "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active' AND Project__c = '" +
+          "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Responsible_Staff__r.ReportsToId, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active' AND Project__c = '" +
             project_id +
             "' AND Group_Status__c = 'Active'",
           async function (err, result) {
@@ -18,7 +18,7 @@ const TrainingGroupsResolvers = {
             }
 
             await sf_conn.query(
-              `SELECT Staff__r.Name, Project__c FROM Project_Role__c WHERE Roles_Status__c = 'Active' AND Role__c = 'Business Advisor' AND Project__c = '${project_id}'`,
+              `SELECT Name FROM Contact WHERE Id = '${result.records[0].Responsible_Staff__r.ReportsToId}'`,
               async function (err, result2) {
                 if (err) {
                   console.error(err);
@@ -29,12 +29,7 @@ const TrainingGroupsResolvers = {
                   };
                 }
 
-                result2.records.forEach((record) => {
-                  business_advisors.push({
-                    project_id: record.Project__c,
-                    business_advisor: record.Staff__r.Name,
-                  });
-                });
+                business_advisor = result2.records[0].Name;
               }
             );
 
@@ -71,13 +66,7 @@ const TrainingGroupsResolvers = {
               tg_name: record.Name,
               tns_id: record.TNS_Id__c,
               total_participants: record.Active_Participants_Count__c || 0,
-              business_advisor: business_advisors
-                ? business_advisors
-                    .filter(
-                      (advisor) => advisor.project_id === record.Project__c
-                    )
-                    .map((advisor) => advisor.business_advisor)
-                : [],
+              business_advisor,
               farmer_trainer: record.Responsible_Staff__r.Name,
             };
           }),
