@@ -26,6 +26,8 @@ import TrainingSessionsTypeDefs from "./src/typeDefs/training_sessions.typeDefs.
 import TrainingSessionsResolvers from "./src/resolvers/training_sessions.resolvers.mjs";
 import TrainingGroupsTypeDefs from "./src/typeDefs/training_groups.typeDefs.mjs";
 import TrainingGroupsResolvers from "./src/resolvers/training_groups.resolvers.mjs";
+import ParticipantsTypeDefs from "./src/typeDefs/participants.typeDefs.mjs";
+import ParticipantsResolvers from "./src/resolvers/participants.resolvers.mjs";
 
 const app = express();
 
@@ -168,6 +170,7 @@ const server = new ApolloServer({
     RolesTypeDefs,
     usersTypeDefs,
     ProjectsTypeDefs,
+    ParticipantsTypeDefs,
     LoginsTypeDefs,
     TrainingGroupsTypeDefs,
     TrainingSessionsTypeDefs,
@@ -177,6 +180,7 @@ const server = new ApolloServer({
     RolesResolvers,
     UsersResolvers,
     ProjectsResolvers,
+    ParticipantsResolvers,
     LoginsResolvers,
     TrainingGroupsResolvers,
     TrainingSessionsResolvers,
