@@ -14,6 +14,7 @@ const ProjectsTypeDefs = gql`
     loadProjects: LoadProjectsResponse
     getProjects: ProjectsResponse
     getProjectById(project_id: ID!): ProjectResponse
+    getProjectsAssigned(user_id: ID!): ProjectsResponse
     getProjectBusinessAdvisors(project_id: ID!): PRResponse
     getProjectFarmerTrainers(project_id: ID!): PRResponse
     getProjectStatistics(sf_project_id: ID!): ProjectStatisticsResponse

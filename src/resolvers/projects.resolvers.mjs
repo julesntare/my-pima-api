@@ -1,4 +1,6 @@
+import Participants from "../models/participants.model.mjs";
 import Projects from "../models/projects.models.mjs";
+import Users from "../models/users.model.mjs";
 import loadSFProjects from "../reusables/load_projects.mjs";
 
 const ProjectsResolvers = {
@@ -51,6 +53,51 @@ const ProjectsResolvers = {
         return {
           message: err.message,
           status: err.status,
+        };
+      }
+    },
+
+    getProjectsAssigned: async (_, { user_id }) => {
+      try {
+        const user = await Users.findOne({
+          where: { user_id },
+        });
+
+        if (!user) {
+          return {
+            message: "User not found",
+            status: 404,
+          };
+        }
+
+        // get projects from participants table by user_id
+        const projects = await Participants.findAll({
+          where: { user_id },
+          include: [
+            {
+              model: Projects,
+            },
+          ],
+        });
+
+        if (!projects) {
+          return {
+            message: "Projects not found",
+            status: 404,
+          };
+        }
+
+        return {
+          message: "Projects fetched successfully",
+          status: 200,
+          projects: projects.map((project) => project.tbl_project),
+        };
+      } catch (err) {
+        console.error(err);
+
+        return {
+          message: err.message,
+          status: 500,
         };
       }
     },
