@@ -2,18 +2,6 @@ import Projects from "../models/projects.models.mjs";
 
 const TrainingSessionsResolvers = {
   Query: {
-    trainingSessionStatistics: async (_, { ts_id }, { sf_conn }) => {
-      return {
-        message: "Training session statistics fetched successfully",
-        status: 200,
-        statistics: {
-          male_attendance: 0,
-          female_attendance: 0,
-          total_attendance: 0,
-        },
-      };
-    },
-
     trainingSessions: async (_, __, { sf_conn }) => {
       try {
         // get training sessions from soql query
@@ -39,6 +27,7 @@ const TrainingSessionsResolvers = {
                 ts_name: training_session.Name,
                 ts_module: training_session.Module_Name__c,
                 ts_group: training_session.Training_Group__c,
+                tns_id: training_session.Training_Group__r.TNS_Id__c,
                 ts_status: training_session.Session_Status__c,
                 total_male: training_session.Male_Attendance__c || 0,
                 total_female: training_session.Female_Attendance__c || 0,
@@ -93,6 +82,8 @@ const TrainingSessionsResolvers = {
                 ts_id: training_session.Id,
                 ts_name: training_session.Name,
                 ts_module: training_session.Module_Name__c,
+                ts_group: training_session.Training_Group__c,
+                tns_id: training_session.Training_Group__r.TNS_Id__c,
                 ts_status: training_session.Session_Status__c,
                 total_male: training_session.Male_Attendance__c || 0,
                 total_female: training_session.Female_Attendance__c || 0,
