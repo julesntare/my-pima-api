@@ -62,7 +62,7 @@ const pubSub = new RedisPubSub({
 
 dotenv.config();
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 6500;
 
 const creds = {
   username: process.env.SF_USERNAME,
@@ -97,72 +97,6 @@ conn.login(
     console.log("Salesforce : JSForce Connection is established!");
   }
 );
-
-app.get("/api/sf/ts", (req, res) => {
-  conn.query(
-    "SELECT Id, Name, Module_Name__c, Training_Group__c, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__c  FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active'",
-    function (err, result) {
-      if (err) {
-        return console.error(err);
-      }
-      console.log("total : " + result.totalSize);
-      console.log("fetched : " + result.records.length);
-
-      return res.json({
-        message: "Training sessions fetched successfully",
-        status: 200,
-        totalSize: result.totalSize,
-        trainingSessions: result.records.map((record) => {
-          return {
-            ts_id: record.Id,
-            ts_name: record.Name,
-            module_name: record.Module_Name__c,
-            tg_id: record.Training_Group__c,
-            tns_id: record.Training_Group__r.TNS_Id__c,
-            session_status: record.Session_Status__c,
-            male_attendance: record.Male_Attendance__c,
-            female_attendance: record.Female_Attendance__c,
-            farmer_trainer: record.Trainer__c,
-          };
-        }),
-      });
-    }
-  );
-});
-
-app.get("/api/sf/tp", (req, res) => {
-  conn.query(
-    "SELECT Id, Participant_Full_Name__c, Phone_Number__c, Gender__c, Location__c,	TNS_Id__c, Training_Group__r.Name, Status__c, Trainer_Name__c, Farm_Size__c, Project__c FROM Participant__c",
-    function (err, result) {
-      if (err) {
-        return console.error(err);
-      }
-      console.log("total : " + result.totalSize);
-      console.log("fetched : " + result.records.length);
-
-      return res.json({
-        message: "Training participants fetched successfully",
-        status: 200,
-        totalSize: result.totalSize,
-        trainingParticipants: result.records.map((record) => {
-          return {
-            tp_id: record.Id,
-            tp_name: record.Participant_Full_Name__c,
-            phone_number: record.Phone_Number__c,
-            gender: record.Gender__c,
-            location: record.Location__c,
-            tns_id: record.TNS_Id__c,
-            tg_name: record.Training_Group__r.Name,
-            status: record.Status__c,
-            farmer_trainer: record.Trainer_Name__c,
-            farm_size: record.Farm_Size__c,
-            project_id: record.Project__c,
-          };
-        }),
-      });
-    }
-  );
-});
 
 const server = new ApolloServer({
   typeDefs: [

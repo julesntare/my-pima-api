@@ -5,16 +5,16 @@ const TrainingSessionsTypeDefs = gql`
         ts_id: ID!
         ts_name: String!
         ts_module: String!
-        ts_group: String!
+        ts_group: String
         ts_status: String!
-        total_males: Int!
-        total_females: Int!
+        total_males: Int
+        total_females: Int
     }
 
     type Query {
         trainingSessions: AllTrainingSessionsResponse
         trainingSession(ts_id: ID!): TrainingSessionResponse
-        trainingSessionsByGroup(ts_group: String!): AllTrainingSessionsResponse
+        trainingSessionsByGroup(tg_id: String!): AllTrainingSessionsResponse
         trainingSessionStatistics(ts_id: ID!): TrainingSessionStatisticsResponse
     }
 
