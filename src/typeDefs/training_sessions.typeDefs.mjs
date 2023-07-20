@@ -14,7 +14,7 @@ const TrainingSessionsTypeDefs = gql`
   type Query {
     trainingSessions: AllTrainingSessionsResponse
     trainingSession(ts_id: ID!): TrainingSessionResponse
-    trainingSessionsByProject(proj_name: String!): AllTrainingSessionsResponse
+    trainingSessionsByProject(sf_project_id: String!): AllTrainingSessionsResponse
     trainingSessionsByGroup(tg_id: String!): AllTrainingSessionsResponse
     trainingSessionStatistics(ts_id: ID!): TrainingSessionStatisticsResponse
   }

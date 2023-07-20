@@ -56,10 +56,10 @@ const TrainingSessionsResolvers = {
       }
     },
 
-    trainingSessionsByProject: async (_, { proj_name }, { sf_conn }) => {
+    trainingSessionsByProject: async (_, { sf_project_id }, { sf_conn }) => {
       try {
         const project = await Projects.findOne({
-          where: { project_name: proj_name },
+          where: { sf_project_id },
         });
 
         if (!project) {
@@ -69,9 +69,11 @@ const TrainingSessionsResolvers = {
           };
         }
 
+        const project_name = project.dataValues.project_name;
+
         // get training sessions
         const training_sessions = await sf_conn.query(
-          `SELECT Id, Name, Module_Name__c, Training_Group__c, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__c, Project_Name__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active' AND Project_Name__c = '${proj_name}'`
+          `SELECT Id, Name, Module_Name__c, Training_Group__c, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__c, Project_Name__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active' AND Project_Name__c = '${project_name}'`
         );
 
         // check if training sessions exist
