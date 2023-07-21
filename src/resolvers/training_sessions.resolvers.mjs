@@ -6,7 +6,7 @@ const TrainingSessionsResolvers = {
       try {
         // get training sessions from soql query
         const training_sessions = await sf_conn.query(
-          "SELECT Id, Name, Module_Name__c, Training_Group__c, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Date__c  FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active'"
+          "SELECT Id, Name, Module_Name__c, Training_Group__r.Name, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Date__c  FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active'"
         );
 
         // check if training sessions exist
@@ -26,7 +26,7 @@ const TrainingSessionsResolvers = {
                 ts_id: training_session.Id,
                 ts_name: training_session.Name,
                 ts_module: training_session.Module_Name__c,
-                ts_group: training_session.Training_Group__c,
+                ts_group: training_session.Training_Group__r.Name,
                 tns_id: training_session.Training_Group__r.TNS_Id__c,
                 farmer_trainer: training_session.Trainer__r
                   ? training_session.Trainer__r.Name
