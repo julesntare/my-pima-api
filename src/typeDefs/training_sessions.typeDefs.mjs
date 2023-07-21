@@ -7,9 +7,11 @@ const TrainingSessionsTypeDefs = gql`
     ts_module: String!
     ts_group: String
     tns_id: String
+    farmer_trainer: String
     ts_status: String!
     total_males: Int
     total_females: Int
+    session_date: String
   }
 
   type Query {
