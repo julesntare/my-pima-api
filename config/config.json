@@ -1,23 +1,38 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "Ju.jo.123.pg",
-    "database": "my-pima-db",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "my_pima",
+    "password": "oP53ZnOwnucGTZU4sA6yQfJ0cehqkxZn",
+    "database": "my_pima_db",
+    "host": "dpg-ciac8859aq007t81i8n0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "dialectOptions": {
+      "ssl": true,
+      "native": true
+    }
   },
   "test": {
-    "username": "postgres",
-    "password": "Ju.jo.123.pg",
-    "database": "my-pima-db",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "my_pima",
+    "password": "oP53ZnOwnucGTZU4sA6yQfJ0cehqkxZn",
+    "database": "my_pima_db",
+    "host": "dpg-ciac8859aq007t81i8n0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "dialectOptions": {
+      "ssl": true,
+      "native": true
+    }
   },
   "production": {
-    "username": "postgres",
-    "password": "Ju.jo.123.pg",
-    "database": "my-pima-db",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "my_pima",
+    "password": "oP53ZnOwnucGTZU4sA6yQfJ0cehqkxZn",
+    "database": "my_pima_db",
+    "host": "dpg-ciac8859aq007t81i8n0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "protocol": "postgres",
+    "dialectOptions": {
+      "ssl": true,
+      "native": true
+    }
   }
 }

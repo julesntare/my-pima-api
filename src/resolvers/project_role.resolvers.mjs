@@ -1,17 +1,17 @@
-import Participants from "../models/participants.model.mjs";
+import ProjectRole from "../models/project_role.model.mjs";
 import Projects from "../models/projects.models.mjs";
 import Users from "../models/users.model.mjs";
 
-const ParticipantsResolvers = {
+const ProjectRoleResolvers = {
   Query: {
-    getParticipants: async (_, __, {}) => {
+    getProjectRoles: async (_, __, {}) => {
       try {
-        const res = await Participants.findAll();
+        const res = await ProjectRole.findAll();
 
         return {
-          message: "Participants fetched successfully",
+          message: "ProjectRole fetched successfully",
           status: 200,
-          participants: res,
+          project_role: res,
         };
       } catch (err) {
         console.error(err);
@@ -23,21 +23,21 @@ const ParticipantsResolvers = {
       }
     },
 
-    getParticipantById: async (_, { participant_id }, {}) => {
+    getProjectRoleById: async (_, { pr_id }, {}) => {
       try {
-        const res = await Participants.findByPk(participant_id);
+        const res = await ProjectRole.findByPk(pr_id);
 
         if (!res) {
           return {
-            message: "Participant not found",
+            message: "Project Role not found",
             status: 404,
           };
         }
 
         return {
-          message: "Participant fetched successfully",
+          message: "Project Role fetched successfully",
           status: 200,
-          participant: res,
+          project_role: res,
         };
       } catch (err) {
         console.error(err);
@@ -49,9 +49,9 @@ const ParticipantsResolvers = {
       }
     },
 
-    getParticipantsByUserId: async (_, { user_id }, {}) => {
+    getProjectRolesByUserId: async (_, { user_id }, {}) => {
       try {
-        const res = await Participants.findAll({
+        const res = await ProjectRole.findAll({
           where: {
             user_id,
           },
@@ -59,15 +59,15 @@ const ParticipantsResolvers = {
 
         if (!res) {
           return {
-            message: "Participants not found",
+            message: "ProjectRole not found",
             status: 404,
           };
         }
 
         return {
-          message: "Participants fetched successfully",
+          message: "ProjectRole fetched successfully",
           status: 200,
-          participants: res,
+          project_role: res,
         };
       } catch (err) {
         console.error(err);
@@ -81,7 +81,7 @@ const ParticipantsResolvers = {
   },
 
   Mutation: {
-    addParticipant: async (_, { user_id, project_id }, {}) => {
+    addProjectRole: async (_, { user_id, project_id }, {}) => {
       try {
         // Check if user exists
         const user = await Users.findByPk(user_id);
@@ -101,30 +101,30 @@ const ParticipantsResolvers = {
           };
         }
 
-        // Check if participant already exists
-        const participant = await Participants.findOne({
+        // Check if project_role already exists
+        const project_role = await ProjectRole.findOne({
           where: {
             user_id,
             project_id,
           },
         });
 
-        if (participant) {
+        if (project_role) {
           return {
-            message: "Participant already exists",
+            message: "Project Role already exists",
             status: 400,
           };
         }
 
-        const res = await Participants.create({
+        const res = await ProjectRole.create({
           user_id,
           project_id,
         });
 
         return {
-          message: "Participant added successfully",
+          message: "Project Role added successfully",
           status: 200,
-          participant: res,
+          project_role: res,
         };
       } catch (err) {
         console.error(err);
@@ -136,17 +136,13 @@ const ParticipantsResolvers = {
       }
     },
 
-    updateParticipant: async (
-      _,
-      { participant_id, user_id, project_id },
-      {}
-    ) => {
-      // Check if participant exists
-      const participant = await Participants.findByPk(participant_id);
+    updateProjectRole: async (_, { pr_id, user_id, project_id }, {}) => {
+      // Check if project_role exists
+      const project_role = await ProjectRole.findByPk(pr_id);
 
-      if (!participant) {
+      if (!project_role) {
         return {
-          message: "Participant not found",
+          message: "Project Role not found",
           status: 404,
         };
       }
@@ -170,37 +166,37 @@ const ParticipantsResolvers = {
       }
 
       // check if user and project combination already exists
-      const participantExists = await Participants.findOne({
+      const projectRoleExists = await ProjectRole.findOne({
         where: {
           user_id,
           project_id,
         },
       });
 
-      if (participantExists) {
+      if (projectRoleExists) {
         return {
-          message: "Participant already exists",
+          message: "Project Role already exists",
           status: 400,
         };
       }
 
       try {
-        const res = await Participants.update(
+        const res = await ProjectRole.update(
           {
             user_id,
             project_id,
           },
           {
             where: {
-              participant_id,
+              pr_id,
             },
           }
         );
 
         return {
-          message: "Participant updated successfully",
+          message: "Project Role updated successfully",
           status: 200,
-          participant: res,
+          project_role: res,
         };
       } catch (err) {
         console.error(err);
@@ -212,28 +208,28 @@ const ParticipantsResolvers = {
       }
     },
 
-    deleteParticipant: async (_, { participant_id }, {}) => {
+    deleteProjectRole: async (_, { pr_id }, {}) => {
       try {
-        // Check if participant exists
-        const participant = await Participants.findByPk(participant_id);
+        // Check if projectRole exists
+        const projectRole = await ProjectRole.findByPk(pr_id);
 
-        if (!participant) {
+        if (!projectRole) {
           return {
-            message: "Participant not found",
+            message: "Project Role not found",
             status: 404,
           };
         }
 
-        const res = await Participants.destroy({
+        const res = await ProjectRole.destroy({
           where: {
-            participant_id,
+            pr_id,
           },
         });
 
         return {
-          message: "Participant deleted successfully",
+          message: "Project Role deleted successfully",
           status: 200,
-          participant: res,
+          project_role: res,
         };
       } catch (err) {
         console.error(err);
@@ -247,4 +243,4 @@ const ParticipantsResolvers = {
   },
 };
 
-export default ParticipantsResolvers;
+export default ProjectRoleResolvers;
