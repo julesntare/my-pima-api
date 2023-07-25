@@ -3,8 +3,8 @@ import sequelize from "../config/db.mjs";
 import Projects from "./projects.models.mjs";
 import Users from "./users.model.mjs";
 
-const Participants = sequelize.define("tbl_participants", {
-  participant_id: {
+const ProjectRole = sequelize.define("tbl_project_role", {
+  pr_id: {
     type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
@@ -35,22 +35,22 @@ const Participants = sequelize.define("tbl_participants", {
   },
 });
 
-Users.hasMany(Participants, {
+Users.hasMany(ProjectRole, {
   foreignKey: "user_id",
   onDelete: "CASCADE",
 });
 
-Participants.belongsTo(Users, {
+ProjectRole.belongsTo(Users, {
   foreignKey: "user_id",
 });
 
-Projects.hasMany(Participants, {
+Projects.hasMany(ProjectRole, {
   foreignKey: "project_id",
   onDelete: "CASCADE",
 });
 
-Participants.belongsTo(Projects, {
+ProjectRole.belongsTo(Projects, {
   foreignKey: "project_id",
 });
 
-export default Participants;
+export default ProjectRole;

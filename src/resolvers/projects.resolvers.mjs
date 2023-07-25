@@ -1,4 +1,4 @@
-import Participants from "../models/participants.model.mjs";
+import ProjectRole from "../models/project_role.model.mjs";
 import Projects from "../models/projects.models.mjs";
 import Users from "../models/users.model.mjs";
 import loadSFProjects from "../reusables/load_projects.mjs";
@@ -70,8 +70,8 @@ const ProjectsResolvers = {
           };
         }
 
-        // get projects from participants table by user_id
-        const projects = await Participants.findAll({
+        // get projects from project role table by user_id
+        const projects = await ProjectRole.findAll({
           where: { user_id },
           include: [
             {

@@ -14,7 +14,6 @@ const LoginsResolvers = {
     getLogins: async () => {
       try {
         const logins = await UserSessions.findAll(
-          // exclude updatedAt column
           { attributes: { exclude: ["updatedAt"] } }
         );
         return {
@@ -65,11 +64,7 @@ const LoginsResolvers = {
           return {
             message: "Authenticated Successful!",
             status: 200,
-            user: {
-              user_id: user.user_id,
-              user_name: user.user_name,
-              user_email: user.user_email,
-            },
+            user,
             token: jwt_token,
           };
         }
@@ -124,11 +119,7 @@ const LoginsResolvers = {
       return {
         message: "Login added successfully",
         status: 200,
-        user: {
-          user_id: user.user_id,
-          user_name: user.user_name,
-          user_email: user.user_email,
-        },
+        user,
         token,
       };
     },
@@ -136,7 +127,6 @@ const LoginsResolvers = {
     verifyToken: async (_, { token }) => {
       try {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-        console.log(decoded);
 
         const userSession = await UserSessions.findOne({
           where: { session_token: token },
