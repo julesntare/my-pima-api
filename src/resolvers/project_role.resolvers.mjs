@@ -9,7 +9,7 @@ const ProjectRoleResolvers = {
         const res = await ProjectRole.findAll();
 
         return {
-          message: "ProjectRole fetched successfully",
+          message: "Project Role fetched successfully",
           status: 200,
           project_role: res,
         };
@@ -59,13 +59,13 @@ const ProjectRoleResolvers = {
 
         if (!res) {
           return {
-            message: "ProjectRole not found",
+            message: "Project Role not found",
             status: 404,
           };
         }
 
         return {
-          message: "ProjectRole fetched successfully",
+          message: "Project Role fetched successfully",
           status: 200,
           project_role: res,
         };
@@ -119,6 +119,7 @@ const ProjectRoleResolvers = {
         const res = await ProjectRole.create({
           user_id,
           project_id,
+          role: "afd4cf48-4a81-41bb-939e-1faff919c04d"
         });
 
         return {

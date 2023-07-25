@@ -1,7 +1,7 @@
 import { gql } from "apollo-server-express";
 
 const ProjectRoleTypeDefs = gql`
-  type ProjectRoles {
+  type ProjectRole {
     pr_id: ID
     user_id: ID
     project_id: ID
@@ -28,13 +28,13 @@ const ProjectRoleTypeDefs = gql`
   type ProjectRolesResponse {
     message: String
     status: Int
-    project_role: [ProjectRoles]
+    project_role: [ProjectRole]
   }
 
   type ProjectRoleResponse {
     message: String
     status: Int
-    project_role: ProjectRoles
+    project_role: ProjectRole
   }
 `;
 
