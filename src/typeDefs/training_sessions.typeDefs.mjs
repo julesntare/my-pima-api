@@ -11,6 +11,7 @@ const TrainingSessionsTypeDefs = gql`
     ts_status: String!
     total_males: Int
     total_females: Int
+    session_images: [String]
     session_date: String
   }
 
