@@ -1,9 +1,96 @@
 import ProjectRole from "../models/project_role.model.mjs";
 import Projects from "../models/projects.models.mjs";
+import Roles from "../models/roles.model.mjs";
 import Users from "../models/users.model.mjs";
 
 const ProjectRoleResolvers = {
   Query: {
+    loadProjectRoles: async (_, __, { sf_conn }) => {
+      try {
+        // create soql query
+        const query = `SELECT Id, Project__c, Role__c, Staff__c FROM Project_Role__c`;
+
+        // query salesforce
+        const res = await sf_conn.query(query);
+
+        // for every record, check if Project__c or Staff__C exists in Projects or Users table respectively
+        // if it doesn't exist, skip it
+        // if it exists, create a new ProjectRole record with the project_id and user_id
+        for (let i = 0; i < res.records.length; i++) {
+          console.log(i, res.records.length);
+          const record = res.records[i];
+
+          const project = await Projects.findOne({
+            where: {
+              sf_project_id: record.Project__c,
+            },
+          });
+
+          const user = await Users.findOne({
+            where: {
+              sf_user_id: record.Staff__c,
+            },
+          });
+
+          if (!project || !user) {
+            continue;
+          }
+
+          // if record already exists, skip it
+          const projectRoleExists = await ProjectRole.findOne({
+            where: {
+              project_id: project.project_id,
+              user_id: user.user_id,
+            },
+          });
+
+          if (projectRoleExists) {
+            continue;
+          }
+
+          let role = "standard";
+
+          if (record.Role__c === "Business Advisor") {
+            role = "business_advisor";
+          } else if (record.Role__c === "Project Manager") {
+            role = "project_manager";
+          } else if (record.Role__c === "Senior Business Advisor") {
+            role = "senior_business_advisor";
+          } else if (record.Role__c === "Farmer Trainer") {
+            role = "farmer_trainer";
+          } else if (record.Role__c === "Business Councelor") {
+            role = "business_councelor";
+          }
+
+          // get role_id from role
+          const roleRes = await Roles.findOne({
+            where: {
+              role_name: role,
+            },
+          });
+
+          await ProjectRole.create({
+            project_id: project.project_id,
+            user_id: user.user_id,
+            role: roleRes.role_id,
+          });
+        }
+
+        return {
+          message: "Project Roles loaded successfully",
+          status: 200,
+          total_loaded: res.records.length,
+        };
+      } catch (err) {
+        console.log(err);
+
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
+
     getProjectRoles: async (_, __, {}) => {
       try {
         const res = await ProjectRole.findAll();
@@ -119,7 +206,7 @@ const ProjectRoleResolvers = {
         const res = await ProjectRole.create({
           user_id,
           project_id,
-          role: "afd4cf48-4a81-41bb-939e-1faff919c04d"
+          role: "afd4cf48-4a81-41bb-939e-1faff919c04d",
         });
 
         return {

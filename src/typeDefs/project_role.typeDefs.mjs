@@ -10,6 +10,7 @@ const ProjectRoleTypeDefs = gql`
   }
 
   type Query {
+    loadProjectRoles: LoadedProjectRolesResponse
     getProjectRoles: ProjectRolesResponse
     getProjectRoleById(pr_id: ID!): ProjectRoleResponse
     getProjectRolesByUserId(user_id: ID!): ProjectRolesResponse
@@ -35,6 +36,12 @@ const ProjectRoleTypeDefs = gql`
     message: String
     status: Int
     project_role: ProjectRole
+  }
+
+  type LoadedProjectRolesResponse {
+    message: String
+    status: Int
+    total_loaded: Int
   }
 `;
 
