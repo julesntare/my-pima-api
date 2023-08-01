@@ -28,6 +28,7 @@ import TrainingGroupsTypeDefs from "./src/typeDefs/training_groups.typeDefs.mjs"
 import TrainingGroupsResolvers from "./src/resolvers/training_groups.resolvers.mjs";
 import ProjectRoleTypeDefs from "./src/typeDefs/project_role.typeDefs.mjs";
 import ProjectRoleResolvers from "./src/resolvers/project_role.resolvers.mjs";
+import fetchImage from "./src/utils/commCareApi.mjs";
 
 const app = express();
 
