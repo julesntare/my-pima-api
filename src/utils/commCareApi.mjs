@@ -7,9 +7,11 @@ const fetchImage = async (url) => {
       headers: {
         Authorization: `ApiKey ${process.env.COMMCARE_API_KEY}`,
       },
+      responseType: "arraybuffer",
     });
 
     const resText = await response.data;
+
     // encode the response to base64
     const base64encodedData = base64encode(resText);
 
@@ -21,8 +23,10 @@ const fetchImage = async (url) => {
 };
 
 function base64encode(str) {
-  let encoded = new Buffer.from(str).toString("base64");
-  return encoded;
+  // encode binary data to base64 encoded string image and specify the mime type
+  const base64data = Buffer.from(str).toString("base64");
+
+  return base64data;
 }
 
 export default fetchImage;
