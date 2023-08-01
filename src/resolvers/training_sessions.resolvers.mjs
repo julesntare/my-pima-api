@@ -35,7 +35,6 @@ const TrainingSessionsResolvers = {
                 ts_status: training_session.Session_Status__c,
                 total_male: training_session.Male_Attendance__c || 0,
                 total_female: training_session.Female_Attendance__c || 0,
-                session_image: training_session.Session_Photo_URL__c,
                 session_date: training_session.Date__c,
               };
             }
@@ -96,9 +95,6 @@ const TrainingSessionsResolvers = {
                 ts_status: training_session.Session_Status__c,
                 total_male: training_session.Male_Attendance__c || 0,
                 total_female: training_session.Female_Attendance__c || 0,
-                session_image: training_session.Session_Photo_URL__c
-                  ? await fetchImage(training_session.Session_Photo_URL__c)
-                  : null,
                 session_date: training_session.Date__c,
               };
             }
@@ -156,11 +152,41 @@ const TrainingSessionsResolvers = {
                 ts_status: training_session.Session_Status__c,
                 total_male: training_session.Male_Attendance__c || 0,
                 total_female: training_session.Female_Attendance__c || 0,
-                session_image: training_session.Session_Photo_URL__c,
                 session_date: training_session.Date__c,
               };
             }
           ),
+        };
+      } catch (err) {
+        console.log(err);
+
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
+
+    trainingSessionImage: async (_, { ts_id }, { sf_conn }) => {
+      try {
+        // check if training session exists in soql query
+        const training_session = await sf_conn.query(
+          `SELECT Id, Session_Photo_URL__c FROM Training_Session__c WHERE Id = '${ts_id}'`
+        );
+
+        if (training_session.totalSize === 0) {
+          return {
+            message: "Training session not found",
+            status: 404,
+          };
+        }
+
+        const session_image = training_session.records[0].Session_Photo_URL__c;
+
+        return {
+          message: "Training session image fetched successfully",
+          status: 200,
+          trainingSessionImage: await fetchImage(session_image),
         };
       } catch (err) {
         console.log(err);
