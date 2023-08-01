@@ -22,6 +22,7 @@ const TrainingSessionsTypeDefs = gql`
       sf_project_id: String!
     ): AllTrainingSessionsResponse
     trainingSessionsByGroup(tg_id: String!): AllTrainingSessionsResponse
+    trainingSessionImage(ts_id: ID!): TrainingSessionImageResponse
   }
 
   type AllTrainingSessionsResponse {
@@ -34,6 +35,12 @@ const TrainingSessionsTypeDefs = gql`
     message: String!
     status: Int!
     trainingSession: TrainingSession
+  }
+
+  type TrainingSessionImageResponse {
+    message: String!
+    status: Int!
+    trainingSessionImage: String
   }
 `;
 
