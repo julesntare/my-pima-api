@@ -29,6 +29,10 @@ import TrainingGroupsResolvers from "./src/resolvers/training_groups.resolvers.m
 import ProjectRoleTypeDefs from "./src/typeDefs/project_role.typeDefs.mjs";
 import ProjectRoleResolvers from "./src/resolvers/project_role.resolvers.mjs";
 import fetchImage from "./src/utils/commCareApi.mjs";
+import ParticipantsTypeDefs from "./src/typeDefs/participants.typeDefs.mjs";
+import ParticipantsResolvers from "./src/resolvers/participants.resolvers.mjs";
+import AttendanceTypeDefs from "./src/typeDefs/attendance.typeDefs.mjs";
+import AttendanceResolvers from "./src/resolvers/attendance.resolvers.mjs";
 
 const app = express();
 
@@ -109,6 +113,8 @@ const server = new ApolloServer({
     LoginsTypeDefs,
     TrainingGroupsTypeDefs,
     TrainingSessionsTypeDefs,
+    ParticipantsTypeDefs,
+    AttendanceTypeDefs
   ],
   resolvers: [
     PermissionsResolvers,
@@ -119,6 +125,8 @@ const server = new ApolloServer({
     LoginsResolvers,
     TrainingGroupsResolvers,
     TrainingSessionsResolvers,
+    ParticipantsResolvers,
+    AttendanceResolvers
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
   csrfPrevention: true,
