@@ -3,11 +3,11 @@ import LocationDetails from "../utils/loadLocation.mjs";
 
 const ParticipantsResolvers = {
   Query: {
-    getParticipantsByProject: async (_, { project_name }, { sf_conn }) => {
+    getParticipantsByProject: async (_, { project_id }, { sf_conn }) => {
       try {
-        // check if project exists by   project_name
-        const project = Projects.findOne({
-          where: { project_name },
+        // check if project exists by project_id
+        const project = await Projects.findOne({
+          where: { sf_project_id: project_id },
         });
 
         if (!project) {

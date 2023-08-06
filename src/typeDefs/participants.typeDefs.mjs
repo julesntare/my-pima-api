@@ -14,7 +14,7 @@ const ParticipantsTypeDefs = gql`
   }
 
   type Query {
-    getParticipantsByProject(project_name: String!): AllParticipantsResponse
+    getParticipantsByProject(project_id: String!): AllParticipantsResponse
     getParticipantsByGroup(tg_id: String!): AllParticipantsResponse
   }
 

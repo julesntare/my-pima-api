@@ -114,7 +114,7 @@ const server = new ApolloServer({
     TrainingGroupsTypeDefs,
     TrainingSessionsTypeDefs,
     ParticipantsTypeDefs,
-    AttendanceTypeDefs
+    AttendanceTypeDefs,
   ],
   resolvers: [
     PermissionsResolvers,
@@ -126,7 +126,7 @@ const server = new ApolloServer({
     TrainingGroupsResolvers,
     TrainingSessionsResolvers,
     ParticipantsResolvers,
-    AttendanceResolvers
+    AttendanceResolvers,
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
   csrfPrevention: true,
