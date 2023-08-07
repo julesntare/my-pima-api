@@ -18,7 +18,7 @@ const ParticipantsResolvers = {
         }
 
         const participants = await sf_conn.query(
-          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c FROM Participant__c WHERE Project__c = '" +
+          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__r.Responsible_Staff__r.ReportsToId FROM Participant__c WHERE Project__c = '" +
             project.project_name +
             "'"
         );
@@ -39,6 +39,10 @@ const ParticipantsResolvers = {
               sf_conn
             );
 
+            const reportsTo = await sf_conn.query(
+              `SELECT Id, Name FROM Contact WHERE Id = '${participant.Training_Group__r.Responsible_Staff__r.ReportsToId}'`
+            );
+
             return {
               p_id: participant.Id,
               full_name: participant.Participant_Full_Name__c,
@@ -50,6 +54,7 @@ const ParticipantsResolvers = {
               tns_id: participant.TNS_Id__c,
               status: participant.Status__c,
               farmer_trainer: participant.Trainer_Name__c,
+              business_advisor: reportsTo.records[0].Name || "N/A",
               project_name: participant.Project__c,
               training_group: participant.Training_Group__c,
             };
@@ -80,7 +85,7 @@ const ParticipantsResolvers = {
         }
 
         const participants = await sf_conn.query(
-          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c FROM Participant__c WHERE Training_Group__c = '" +
+          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId FROM Participant__c WHERE Training_Group__c = '" +
             tg_id +
             "'"
         );
@@ -101,6 +106,10 @@ const ParticipantsResolvers = {
               sf_conn
             );
 
+            const reportsTo = await sf_conn.query(
+              `SELECT Id, Name FROM Contact WHERE Id = '${participant.Training_Group__r.Responsible_Staff__r.ReportsToId}'`
+            );
+
             return {
               p_id: participant.Id,
               full_name: participant.Participant_Full_Name__c,
@@ -112,6 +121,7 @@ const ParticipantsResolvers = {
               tns_id: participant.TNS_Id__c,
               status: participant.Status__c,
               farmer_trainer: participant.Trainer_Name__c,
+              business_advisor: reportsTo.records[0].Name || "N/A",
               project_name: participant.Project__c,
               training_group: participant.Training_Group__c,
             };

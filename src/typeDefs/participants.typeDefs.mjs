@@ -9,6 +9,7 @@ const ParticipantsTypeDefs = gql`
     tns_id: String!
     status: String!
     farmer_trainer: String!
+    business_advisor: String!
     project_name: String!
     training_group: String!
   }
