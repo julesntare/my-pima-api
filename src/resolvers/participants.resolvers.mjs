@@ -18,7 +18,7 @@ const ParticipantsResolvers = {
         }
 
         const participants = await sf_conn.query(
-          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__r.Responsible_Staff__r.ReportsToId FROM Participant__c WHERE Project__c = '" +
+          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId FROM Participant__c WHERE Project__c = '" +
             project.project_name +
             "'"
         );
