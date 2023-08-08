@@ -33,8 +33,8 @@ const TrainingSessionsResolvers = {
                   ? training_session.Trainer__r.Name
                   : null,
                 ts_status: training_session.Session_Status__c,
-                total_male: training_session.Male_Attendance__c || 0,
-                total_female: training_session.Female_Attendance__c || 0,
+                total_males: training_session.Male_Attendance__c || 0,
+                total_females: training_session.Female_Attendance__c || 0,
                 session_date: training_session.Date__c,
               };
             }
@@ -93,8 +93,8 @@ const TrainingSessionsResolvers = {
                   ? training_session.Trainer__r.Name
                   : null,
                 ts_status: training_session.Session_Status__c,
-                total_male: training_session.Male_Attendance__c || 0,
-                total_female: training_session.Female_Attendance__c || 0,
+                total_males: training_session.Male_Attendance__c || 0,
+                total_females: training_session.Female_Attendance__c || 0,
                 session_date: training_session.Date__c,
               };
             }
@@ -150,8 +150,8 @@ const TrainingSessionsResolvers = {
                   ? training_session.Trainer__r.Name
                   : null,
                 ts_status: training_session.Session_Status__c,
-                total_male: training_session.Male_Attendance__c || 0,
-                total_female: training_session.Female_Attendance__c || 0,
+                total_males: training_session.Male_Attendance__c || 0,
+                total_females: training_session.Female_Attendance__c || 0,
                 session_date: training_session.Date__c,
               };
             }
