@@ -1,11 +1,13 @@
+import GetTotalParticipants from "../utils/getTotalParticipants.mjs";
+
 const TrainingGroupsResolvers = {
   Query: {
     trainingGroupsByProject: async (_, { project_id }, { sf_conn }) => {
       try {
         const res = await sf_conn.query(
-          "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Responsible_Staff__r.ReportsToId, Project__c FROM Training_Group__c WHERE Project__r.Project_Status__c='Active' AND Project__c = '" +
+          "SELECT Id, Name, TNS_Id__c, Active_Participants_Count__c, Responsible_Staff__r.Name, Responsible_Staff__r.ReportsToId, Project__c, Group_Status__c FROM Training_Group__c WHERE Project__c = '" +
             project_id +
-            "' AND Group_Status__c = 'Active'",
+            "'",
           async function (err, result) {
             if (err) {
               console.error(err);
@@ -70,17 +72,28 @@ const TrainingGroupsResolvers = {
           message: "Training Groups fetched successfully",
           status: 200,
           trainingGroups:
-            res.records.map((item) => {
+            res.records.map(async (item) => {
+              const res_participants = await GetTotalParticipants(
+                item.Id,
+                sf_conn
+              );
+
               return {
                 tg_id: item.Id,
                 tg_name: item.Name,
                 tns_id: item.TNS_Id__c,
-                total_participants: item.Active_Participants_Count__c,
+                total_participants:
+                  res_participants.status === 200
+                    ? res_participants.total_participants
+                    : 0,
                 farmer_trainer: item.Responsible_Staff__r.Name,
-                business_advisor: res2.records.find(
-                  (contact) =>
-                    contact.Id === item.Responsible_Staff__r.ReportsToId
-                ).Name,
+                business_advisor: item.Responsible_Staff__r.ReportsToId
+                  ? res2.records.find(
+                      (contact) =>
+                        contact.Id === item.Responsible_Staff__r.ReportsToId
+                    ).Name
+                  : null,
+                status: item.Group_Status__c,
               };
             }) || [],
         };
