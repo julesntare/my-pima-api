@@ -30,31 +30,64 @@ const ParticipantsResolvers = {
           };
         }
 
+        const res1 = await sf_conn.query(
+          `SELECT Name, Parent_Location__c, COUNT(Id) FROM Location__c GROUP BY Parent_Location__c, Name`,
+          async function (err, result) {
+            if (err) {
+              console.error(err);
+
+              return {
+                message: err.message,
+                status: 500,
+              };
+            }
+
+            return result;
+          }
+        );
+
+        const reportsTo = await sf_conn.query(
+          `SELECT Id, Name FROM Contact`,
+          async function (err, result) {
+            if (err) {
+              console.error(err);
+
+              return {
+                message: err.message,
+                status: 500,
+              };
+            }
+
+            return result;
+          }
+        );
+
         return {
           message: "Participants fetched successfully",
           status: 200,
           participants: participants.records.map(async (participant) => {
-            const location = await LocationDetails(
-              participant.Location__c,
-              sf_conn
-            );
-
-            const reportsTo = await sf_conn.query(
-              `SELECT Id, Name FROM Contact WHERE Id = '${participant.Training_Group__r.Responsible_Staff__r.ReportsToId}'`
-            );
-
             return {
               p_id: participant.Id,
               full_name: participant.Participant_Full_Name__c,
               gender: participant.Gender__c,
-              location:
-                location.status === 200
-                  ? location.location_details.location_name
-                  : "N/A",
+              location: "N/A",
               tns_id: participant.TNS_Id__c,
               status: participant.Status__c,
               farmer_trainer: participant.Trainer_Name__c,
-              business_advisor: reportsTo.records[0].Name || "N/A",
+              business_advisor:
+                reportsTo.records.find(
+                  (contact) =>
+                    contact.Id ===
+                    participant.Training_Group__r.Responsible_Staff__r
+                      .ReportsToId
+                ) === undefined
+                  ? null
+                  : reportsTo.records.find(
+                      (contact) =>
+                        contact.Id ===
+                        participant.Training_Group__r.Responsible_Staff__r
+                          .ReportsToId
+                    ).Name,
               project_name: participant.Project__c,
               training_group: participant.Training_Group__c,
             };
