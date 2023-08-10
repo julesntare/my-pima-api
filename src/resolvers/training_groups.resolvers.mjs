@@ -1,5 +1,3 @@
-import GetTotalParticipants from "../utils/getTotalParticipants.mjs";
-
 const TrainingGroupsResolvers = {
   Query: {
     trainingGroupsByProject: async (_, { project_id }, { sf_conn }) => {
@@ -68,24 +66,39 @@ const TrainingGroupsResolvers = {
           }
         );
 
+        const res3 = await sf_conn.query(
+          `SELECT Training_Group__c, COUNT(Id) FROM Participant__c GROUP BY Training_Group__c`,
+          async function (err, result) {
+            if (err) {
+              console.error(err);
+
+              return {
+                message: err.message,
+                status: 500,
+              };
+            }
+
+            return result;
+          }
+        );
+
         return {
           message: "Training Groups fetched successfully",
           status: 200,
           trainingGroups:
             res.records.map(async (item) => {
-              const res_participants = await GetTotalParticipants(
-                item.Id,
-                sf_conn
-              );
-
               return {
                 tg_id: item.Id,
                 tg_name: item.Name,
                 tns_id: item.TNS_Id__c,
                 total_participants:
-                  res_participants.status === 200
-                    ? res_participants.total_participants
-                    : 0,
+                  res3.records.find(
+                    (record) => record.Training_Group__c === item.Id
+                  ) === undefined
+                    ? 0
+                    : res3.records.find(
+                        (record) => record.Training_Group__c === item.Id
+                      ).expr0,
                 farmer_trainer: item.Responsible_Staff__r.Name,
                 business_advisor: item.Responsible_Staff__r.ReportsToId
                   ? res2.records.find(
