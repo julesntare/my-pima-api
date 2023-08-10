@@ -18,7 +18,7 @@ const ParticipantsResolvers = {
         }
 
         const participants = await sf_conn.query(
-          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId FROM Participant__c WHERE Project__c = '" +
+          "SELECT Id, Participant_Full_Name__c, Gender__c, Training_Group__r.Project_Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId FROM Participant__c WHERE Project__c = '" +
             project.project_name +
             "'"
         );
@@ -31,7 +31,7 @@ const ParticipantsResolvers = {
         }
 
         const res1 = await sf_conn.query(
-          `SELECT Name, Parent_Location__c, COUNT(Id) FROM Location__c GROUP BY Parent_Location__c, Name`,
+          `SELECT Id, Location__r.Name FROM Project_Location__c`,
           async function (err, result) {
             if (err) {
               console.error(err);
@@ -70,7 +70,18 @@ const ParticipantsResolvers = {
               p_id: participant.Id,
               full_name: participant.Participant_Full_Name__c,
               gender: participant.Gender__c,
-              location: "N/A",
+              location:
+                res1.records.find(
+                  (location) =>
+                    location.Id ===
+                    participant.Training_Group__r.Project_Location__c
+                ) === undefined
+                  ? "N/A"
+                  : res1.records.find(
+                      (location) =>
+                        location.Id ===
+                        participant.Training_Group__r.Project_Location__c
+                    ).Location__r.Name,
               tns_id: participant.TNS_Id__c,
               status: participant.Status__c,
               farmer_trainer: participant.Trainer_Name__c,
@@ -131,7 +142,7 @@ const ParticipantsResolvers = {
         }
 
         const res1 = await sf_conn.query(
-          `SELECT Name, Parent_Location__c, COUNT(Id) FROM Location__c GROUP BY Parent_Location__c, Name`,
+          `SELECT Id, Location__r.Name FROM Project_Location__c`,
           async function (err, result) {
             if (err) {
               console.error(err);
@@ -170,7 +181,18 @@ const ParticipantsResolvers = {
               p_id: participant.Id,
               full_name: participant.Participant_Full_Name__c,
               gender: participant.Gender__c,
-              location: "N/A",
+              location:
+                res1.records.find(
+                  (location) =>
+                    location.Id ===
+                    participant.Training_Group__r.Project_Location__c
+                ) === undefined
+                  ? "N/A"
+                  : res1.records.find(
+                      (location) =>
+                        location.Id ===
+                        participant.Training_Group__r.Project_Location__c
+                    ).Location__r.Name,
               tns_id: participant.TNS_Id__c,
               status: participant.Status__c,
               farmer_trainer: participant.Trainer_Name__c,
