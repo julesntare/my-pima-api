@@ -33,6 +33,8 @@ import ParticipantsTypeDefs from "./src/typeDefs/participants.typeDefs.mjs";
 import ParticipantsResolvers from "./src/resolvers/participants.resolvers.mjs";
 import AttendanceTypeDefs from "./src/typeDefs/attendance.typeDefs.mjs";
 import AttendanceResolvers from "./src/resolvers/attendance.resolvers.mjs";
+import FarmVisitsTypeDefs from "./src/typeDefs/farm_visits.typeDefs.mjs";
+import FarmVisitsResolvers from "./src/resolvers/farm_visits.resolvers.mjs";
 
 const app = express();
 
@@ -115,6 +117,7 @@ const server = new ApolloServer({
     TrainingSessionsTypeDefs,
     ParticipantsTypeDefs,
     AttendanceTypeDefs,
+    FarmVisitsTypeDefs,
   ],
   resolvers: [
     PermissionsResolvers,
@@ -127,6 +130,7 @@ const server = new ApolloServer({
     TrainingSessionsResolvers,
     ParticipantsResolvers,
     AttendanceResolvers,
+    FarmVisitsResolvers,
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
   csrfPrevention: true,
