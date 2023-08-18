@@ -1,6 +1,8 @@
 import { gql } from "apollo-server-express";
 
 const ParticipantsTypeDefs = gql`
+  scalar Upload
+
   type Participant {
     p_id: String!
     full_name: String!
@@ -19,10 +21,19 @@ const ParticipantsTypeDefs = gql`
     getParticipantsByGroup(tg_id: String!): AllParticipantsResponse
   }
 
+  type Mutation {
+    uploadParticipants(file: Upload!): UploadResponse
+  }
+
   type AllParticipantsResponse {
     message: String!
     status: Int!
     participants: [Participant]
+  }
+
+  type UploadResponse {
+    message: String!
+    status: Int!
   }
 `;
 

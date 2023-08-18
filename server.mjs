@@ -1,7 +1,9 @@
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import jsforce from "jsforce";
 import { ApolloServer } from "apollo-server-express";
+import { default as graphqlUploadExpress } from "graphql-upload/graphqlUploadExpress.mjs";
 import LoginsTypeDefs from "./src/typeDefs/logins.typeDefs.mjs";
 import LoginsResolvers from "./src/resolvers/logins.resolvers.mjs";
 import ProjectsTypeDefs from "./src/typeDefs/projects.typeDefs.mjs";
@@ -28,13 +30,13 @@ import TrainingGroupsTypeDefs from "./src/typeDefs/training_groups.typeDefs.mjs"
 import TrainingGroupsResolvers from "./src/resolvers/training_groups.resolvers.mjs";
 import ProjectRoleTypeDefs from "./src/typeDefs/project_role.typeDefs.mjs";
 import ProjectRoleResolvers from "./src/resolvers/project_role.resolvers.mjs";
-import fetchImage from "./src/utils/commCareApi.mjs";
 import ParticipantsTypeDefs from "./src/typeDefs/participants.typeDefs.mjs";
 import ParticipantsResolvers from "./src/resolvers/participants.resolvers.mjs";
 import AttendanceTypeDefs from "./src/typeDefs/attendance.typeDefs.mjs";
 import AttendanceResolvers from "./src/resolvers/attendance.resolvers.mjs";
 import FarmVisitsTypeDefs from "./src/typeDefs/farm_visits.typeDefs.mjs";
 import FarmVisitsResolvers from "./src/resolvers/farm_visits.resolvers.mjs";
+import { getDirName } from "./src/utils/getDirName.mjs";
 
 const app = express();
 
@@ -77,6 +79,12 @@ const creds = {
   securityToken: process.env.SF_SECURITY_TOKEN,
   sf_url: process.env.SF_URL,
 };
+
+const uploadsDirectory = path.join(getDirName(import.meta.url), "uploads");
+
+app.use("/uploads", express.static(uploadsDirectory));
+
+app.use(graphqlUploadExpress());
 
 app.get("/api", (req, res) => {
   res.send("Hello, My PIMA API Service!");

@@ -1,4 +1,7 @@
 import Projects from "../models/projects.models.mjs";
+import { join, parse } from "path";
+import fs, { createWriteStream } from "fs";
+import { getDirName } from "../utils/getDirName.mjs";
 
 const ParticipantsResolvers = {
   Query: {
@@ -220,6 +223,54 @@ const ParticipantsResolvers = {
         return {
           message: error.message,
           status: error.status,
+        };
+      }
+    },
+  },
+
+  Mutation: {
+    uploadParticipants: async (_, { file }, { sf_conn }) => {
+      try {
+        // upload avatar to uploads folder (create uploads folder if it doesn't exist)
+        const { createReadStream, filename } = await file;
+        // Invoking the `createReadStream` will return a Readable Stream.
+        let stream = createReadStream();
+
+        let { ext } = parse(filename);
+
+        // check if uploads folder exists
+        const uploadsFolder = join(
+          getDirName(import.meta.url),
+          "../../uploads"
+        );
+
+        if (!fs.existsSync(uploadsFolder)) {
+          fs.mkdirSync(uploadsFolder);
+        }
+
+        // name file with user_id and date
+        const newFilename = `participants-${Date.now()}${ext}`;
+
+        let serverFile = join(
+          getDirName(import.meta.url),
+          `../../uploads/${newFilename}`
+        );
+
+        let writeStream = createWriteStream(serverFile);
+
+        await stream.pipe(writeStream);
+
+        return {
+          message: "New Participants uploaded successfully",
+          status: 200,
+          user,
+        };
+      } catch (error) {
+        console.error(error);
+
+        return {
+          message: "Failed to upload new participants",
+          status: 500,
         };
       }
     },
