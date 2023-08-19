@@ -229,10 +229,10 @@ const ParticipantsResolvers = {
   },
 
   Mutation: {
-    uploadParticipants: async (_, { file }, { sf_conn }) => {
+    uploadParticipants: async (_, { parts_file }, { sf_conn }) => {
       try {
-        // upload avatar to uploads folder (create uploads folder if it doesn't exist)
-        const { createReadStream, filename } = await file;
+        const obj = await parts_file;
+        const { filename, createReadStream } = obj.file;
         // Invoking the `createReadStream` will return a Readable Stream.
         let stream = createReadStream();
 
@@ -263,7 +263,6 @@ const ParticipantsResolvers = {
         return {
           message: "New Participants uploaded successfully",
           status: 200,
-          user,
         };
       } catch (error) {
         console.error(error);

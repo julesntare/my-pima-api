@@ -22,7 +22,7 @@ const ParticipantsTypeDefs = gql`
   }
 
   type Mutation {
-    uploadParticipants(file: Upload!): UploadResponse
+    uploadParticipants(parts_file: Upload!): UploadResponse
   }
 
   type AllParticipantsResponse {
