@@ -7,7 +7,7 @@ const TrainingSessionsResolvers = {
       try {
         // get training sessions from soql query
         const training_sessions = await sf_conn.query(
-          "SELECT Id, Name, Module_Name__c, Training_Group__r.Name, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Session_Photo_URL__c, Date__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active'"
+          "SELECT Id, Name, Module_Name__c, Training_Group__r.Name, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Session_Photo_URL__c, Verified__c, Date__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active'"
         );
 
         // check if training sessions exist
@@ -35,6 +35,7 @@ const TrainingSessionsResolvers = {
                 ts_status: training_session.Session_Status__c,
                 total_males: training_session.Male_Attendance__c || 0,
                 total_females: training_session.Female_Attendance__c || 0,
+                is_verified: training_session.Verified__c,
                 session_date: training_session.Date__c,
               };
             }
@@ -67,7 +68,7 @@ const TrainingSessionsResolvers = {
 
         // get training sessions
         const training_sessions = await sf_conn.query(
-          `SELECT Id, Name, Module_Name__c, Training_Group__r.Name, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Project_Name__c, Session_Photo_URL__c, Date__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active' AND Project_Name__c = '${project_name}'`
+          `SELECT Id, Name, Module_Name__c, Training_Group__r.Name, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Project_Name__c, Session_Photo_URL__c, Verified__c, Date__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active' AND Project_Name__c = '${project_name}'`
         );
 
         // check if training sessions exist
@@ -95,6 +96,7 @@ const TrainingSessionsResolvers = {
                 ts_status: training_session.Session_Status__c,
                 total_males: training_session.Male_Attendance__c || 0,
                 total_females: training_session.Female_Attendance__c || 0,
+                is_verified: training_session.Verified__c,
                 session_date: training_session.Date__c,
               };
             }
@@ -126,7 +128,7 @@ const TrainingSessionsResolvers = {
 
         // get training sessions
         const training_sessions = await sf_conn.query(
-          `SELECT Id, Name, Module_Name__c, Training_Group__c, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Session_Photo_URL__c, Date__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active' AND Training_Group__r.Id = '${tg_id}'`
+          `SELECT Id, Name, Module_Name__c, Training_Group__c, Training_Group__r.TNS_Id__c, Session_Status__c, Male_Attendance__c, Female_Attendance__c, Trainer__r.Name, Session_Photo_URL__c, Verified__c, Date__c FROM Training_Session__c WHERE Training_Group__r.Group_Status__c='Active' AND Training_Group__r.Id = '${tg_id}'`
         );
 
         // check if training sessions exist
@@ -152,6 +154,7 @@ const TrainingSessionsResolvers = {
                 ts_status: training_session.Session_Status__c,
                 total_males: training_session.Male_Attendance__c || 0,
                 total_females: training_session.Female_Attendance__c || 0,
+                is_verified: training_session.Verified__c,
                 session_date: training_session.Date__c,
               };
             }
@@ -190,6 +193,52 @@ const TrainingSessionsResolvers = {
           message: "Training session image fetched successfully",
           status: 200,
           trainingSessionImage: base64encodedData,
+        };
+      } catch (err) {
+        console.log(err);
+
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
+  },
+
+  Mutation: {
+    validateSession: async (_, { ts_id, status }, { sf_conn }) => {
+      try {
+        // check if training session exists in soql query
+        const res = await sf_conn.sobject("Training_Session__c").update(
+          {
+            Id: ts_id,
+            Verified__c: status,
+          },
+          function (err, ret) {
+            if (err || !ret.success) {
+              return {
+                message: err.message,
+                status: err.status,
+              };
+            }
+
+            return ret;
+          }
+        );
+
+        if (!res.success) {
+          return {
+            message: "Training session not found",
+            status: 404,
+          };
+        }
+
+        return {
+          message: "Training session updated successfully",
+          status: 200,
+          trainingSession: {
+            ts_id: res.id,
+          },
         };
       } catch (err) {
         console.log(err);
