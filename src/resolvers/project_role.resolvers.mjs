@@ -165,6 +165,50 @@ const ProjectRoleResolvers = {
         };
       }
     },
+
+    getProjectRolesByProjectId: async (_, { project_id }, {}) => {
+      try {
+        const res = await ProjectRole.findAll({
+          where: {
+            project_id,
+          },
+          include: [
+            {
+              model: Users,
+              as: "tbl_user",
+            },
+            {
+              model: Projects,
+              as: "tbl_project",
+            },
+            {
+              model: Roles,
+              as: "tbl_role",
+            },
+          ],
+        });
+
+        if (!res) {
+          return {
+            message: "Project Role not found",
+            status: 404,
+          };
+        }
+
+        return {
+          message: "Project Role fetched successfully",
+          status: 200,
+          project_role: res,
+        };
+      } catch (err) {
+        console.error(err);
+
+        return {
+          message: err.message,
+          status: 500,
+        };
+      }
+    },
   },
 
   Mutation: {

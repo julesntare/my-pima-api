@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.mjs";
 import Projects from "./projects.models.mjs";
 import Users from "./users.model.mjs";
+import Roles from "./roles.model.mjs";
 
 const ProjectRole = sequelize.define(
   "tbl_project_role",
@@ -65,6 +66,15 @@ Projects.hasMany(ProjectRole, {
 
 ProjectRole.belongsTo(Projects, {
   foreignKey: "project_id",
+});
+
+Roles.hasMany(ProjectRole, {
+  foreignKey: "role",
+  onDelete: "CASCADE",
+});
+
+ProjectRole.belongsTo(Roles, {
+  foreignKey: "role",
 });
 
 export default ProjectRole;
