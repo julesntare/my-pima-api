@@ -27,7 +27,7 @@ const TrainingSessionsTypeDefs = gql`
   }
 
   type Mutation {
-    validateSession(ts_id: ID!, status: Boolean!): TrainingSessionResponse
+    validateSession(ts_id: ID!, status: String!): TrainingSessionResponse
   }
 
   type AllTrainingSessionsResponse {

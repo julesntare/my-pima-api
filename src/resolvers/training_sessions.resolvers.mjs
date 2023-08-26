@@ -207,12 +207,22 @@ const TrainingSessionsResolvers = {
 
   Mutation: {
     validateSession: async (_, { ts_id, status }, { sf_conn }) => {
+      const valid_statuses = ["not_verified", "verified", "rejected"];
+
+      if (!valid_statuses.includes(status)) {
+        return {
+          message: "Invalid status",
+          status: 400,
+        };
+      }
+
       try {
         // check if training session exists in soql query
         const res = await sf_conn.sobject("Training_Session__c").update(
           {
             Id: ts_id,
-            Verified__c: status,
+            Data_Verification__c: status,
+            Verified__c: status === valid_statuses[0] ? false : true,
           },
           function (err, ret) {
             if (err || !ret.success) {
