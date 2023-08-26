@@ -93,7 +93,6 @@ const ProjectsResolvers = {
           projects: projects.map((project) => project.tbl_project),
         };
       } catch (err) {
-        console.log("hi");
         console.error(err);
 
         return {

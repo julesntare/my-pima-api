@@ -3,8 +3,9 @@ import { gql } from "apollo-server-express";
 const ProjectRoleTypeDefs = gql`
   type ProjectRole {
     pr_id: ID
-    user_id: ID
-    project_id: ID
+    tbl_user: User
+    tbl_project: Projects
+    tbl_role: Roles
     createdAt: String
     updatedAt: String
   }
@@ -14,14 +15,20 @@ const ProjectRoleTypeDefs = gql`
     getProjectRoles: ProjectRolesResponse
     getProjectRoleById(pr_id: ID!): ProjectRoleResponse
     getProjectRolesByUserId(user_id: ID!): ProjectRolesResponse
+    getProjectRolesByProjectId(project_id: ID!): ProjectRolesResponse
   }
 
   type Mutation {
-    addProjectRole(user_id: ID!, project_id: ID!): ProjectRoleResponse
+    addProjectRole(
+      user_id: ID!
+      project_id: ID!
+      role_id: String
+    ): ProjectRoleResponse
     updateProjectRole(
       pr_id: ID!
       user_id: ID!
       project_id: ID!
+      role_id: String
     ): ProjectRoleResponse
     deleteProjectRole(pr_id: ID!): ProjectRoleResponse
   }
