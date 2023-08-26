@@ -13,6 +13,7 @@ const TrainingSessionsTypeDefs = gql`
     total_females: Int
     session_image: String
     is_verified: Boolean
+    validation_status: String
     session_date: String
   }
 
@@ -27,7 +28,7 @@ const TrainingSessionsTypeDefs = gql`
   }
 
   type Mutation {
-    validateSession(ts_id: ID!, status: Boolean!): TrainingSessionResponse
+    validateSession(ts_id: ID!, status: String!): TrainingSessionResponse
   }
 
   type AllTrainingSessionsResponse {
