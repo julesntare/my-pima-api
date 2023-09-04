@@ -237,7 +237,6 @@ const ParticipantsResolvers = {
         let stream = createReadStream();
 
         let { ext } = parse(filename);
-        console.log(ext);
 
         // check if file is csv
         if (ext !== ".csv") {
@@ -295,10 +294,19 @@ const ParticipantsResolvers = {
             });
 
             // Get the indexes of the required columns
-            const requiredColumns = ["Farm_Size__c", "Training_Group__c"];
+            const requiredColumns = [
+              "Farm_Size__c",
+              "Training_Group__c",
+              "Household_Number_Test__c",
+              "Primary_Household_Member__c",
+            ];
             const nameColumnIndex = header.lastIndexOf("Name");
             const columnIndexMap = requiredColumns.reduce((map, column) => {
               map[column] = header.indexOf(column);
+              if (column === "Household_Number_Test__c") {
+                map[column] = header.indexOf("Household_Number__c");
+              }
+
               return map;
             }, {});
 
@@ -317,18 +325,154 @@ const ParticipantsResolvers = {
               return formattedRow;
             });
 
-            const houseHoldRes = await sf_conn
-              .sobject("Household__c")
-              .create(formattedData, { allOrNone: true }, function (err, ret) {
-                return {
-                  err,
-                  ret,
-                };
-              });
+            // group data by Household_Number__c and take the row with Primary_Household_Member__c = 'Yes', and get total number of rows in each group and assign total number to Number_of_Members__c
+            const groupedData = formattedData.reduce((acc, curr) => {
+              const key = curr["Household_Number_Test__c"];
 
-            console.log(houseHoldRes);
+              if (!acc[key]) {
+                acc[key] = [];
+              }
 
-            if (houseHoldRes.length > 0) {
+              acc[key].push(curr);
+
+              return acc;
+            }, {});
+
+            const groupedDataArray = Object.values(groupedData);
+
+            const finalFormattedHHData = groupedDataArray.map((group) => {
+              const primaryMember = group.find(
+                (member) => member["Primary_Household_Member__c"] === "Yes"
+              );
+
+              return {
+                ...primaryMember,
+                Number_of_Members__c: group.length,
+              };
+            });
+
+            // check training group from formattedPartsData by looping through each row
+            // if training group does not exist, return error
+            for (const part of finalFormattedHHData) {
+              const tg_id = part.Training_Group__c;
+
+              try {
+                const tg_res = await sf_conn.query(
+                  `SELECT Id FROM Training_Group__c WHERE Id = '${tg_id}'`
+                );
+
+                if (tg_res.totalSize === 0) {
+                  resolve({
+                    message: `Training Group with id ${tg_id} does not exist`,
+                    status: 404,
+                  });
+
+                  return;
+                }
+              } catch (error) {
+                console.log(error);
+                reject({
+                  message: "Training Group not found",
+                  status: 500,
+                });
+
+                return;
+              }
+            }
+
+            // Query existing records by Household_Number__c
+            const existingHouseholdNumbers = finalFormattedHHData.map(
+              (record) => record.Household_Number_Test__c
+            );
+            const query = `SELECT Id, Household_Number_Test__c FROM Household__c WHERE Household_Number_Test__c IN ('${existingHouseholdNumbers.join(
+              "','"
+            )}')`;
+
+            const HHdataToInsert = finalFormattedHHData.map((item) => {
+              const { Primary_Household_Member__c, ...rest } = item;
+
+              return rest;
+            });
+
+            const HHResult = await sf_conn.query(
+              query,
+              function (queryErr, result) {
+                if (queryErr) {
+                  return {
+                    status: 500,
+                  };
+                }
+
+                const existingRecords = result.records;
+
+                const recordsToUpdateInSalesforce = [];
+                const newRecordsToInsertInSalesforce = [];
+
+                HHdataToInsert.forEach((record) => {
+                  const existingRecord = existingRecords.find(
+                    (existing) =>
+                      existing.Household_Number_Test__c ===
+                      record.Household_Number_Test__c
+                  );
+
+                  if (existingRecord) {
+                    // If the record already exists, update it
+                    record.Id = existingRecord.Id;
+                    recordsToUpdateInSalesforce.push(record);
+                  } else {
+                    // If the record does not exist, insert it
+                    newRecordsToInsertInSalesforce.push(record);
+                  }
+                });
+
+                // Update existing records
+                const returnedResult =
+                  recordsToUpdateInSalesforce.length > 0
+                    ? sf_conn
+                        .sobject("Household__c")
+                        .update(
+                          recordsToUpdateInSalesforce,
+                          function (updateErr, updateResult) {
+                            if (updateErr) {
+                              return { status: 500 };
+                            }
+
+                            return {
+                              status: 200,
+                              data: updateResult,
+                            };
+                          }
+                        )
+                    : newRecordsToInsertInSalesforce.length > 0
+                    ? sf_conn
+                        .sobject("Household__c")
+                        .create(
+                          newRecordsToInsertInSalesforce,
+                          function (insertErr, insertResult) {
+                            if (insertErr) {
+                              return console.error(insertErr);
+                            }
+
+                            return {
+                              status: 200,
+                              data: insertResult,
+                            };
+                          }
+                        )
+                    : { status: 200, data: [] };
+
+                return returnedResult;
+              }
+            );
+
+            if (HHResult.length > 0) {
+              // query household records by Household_Number__c
+              const HHRecords = await sf_conn.query(
+                `SELECT Id, Household_Number_Test__c FROM Household__c WHERE Id IN ('${HHResult.map(
+                  (record) => record.id
+                ).join("','")}')`
+              );
+
               // map data and headers for Participant__c
               const participantsHeaders = [
                 "Name",
@@ -360,6 +504,11 @@ const ParticipantsResolvers = {
                 for (const column of participantsHeaders) {
                   const index = columnIndexMap[column];
                   formattedRow[column] = values[index];
+                  formattedRow["Household__c"] = HHRecords.records.find(
+                    (record) =>
+                      record.Household_Number_Test__c ===
+                      values[header.indexOf("Household_Number__c")]
+                  ).Id;
                 }
 
                 return formattedRow;
@@ -369,34 +518,149 @@ const ParticipantsResolvers = {
               const participantsData = formattedPartsData.map((part, index) => {
                 return {
                   ...part,
-                  Household__c: houseHoldRes[index].id,
-                  Resend_to_OpenFN__c:
-                    part.Resend_to_OpenFN__c === "TRUE" ? true : false,
+                  Resend_to_OpenFN__c: false,
                   Create_In_CommCare__c: false,
                 };
               });
 
-              console.log(participantsData);
+              // Query existing records by Participant__c
+              const existingParticipants = participantsData.map(
+                (record) => record.TNS_Id__c
+              );
 
-              const participantsRes = await sf_conn
-                .sobject("Participant__c")
-                .create(
-                  participantsData,
-                  { allOrNone: true },
-                  function (err, ret) {
-                    return { err, ret };
+              const query = `SELECT Id, TNS_Id__c FROM Participant__c WHERE TNS_Id__c IN ('${existingParticipants.join(
+                "','"
+              )}')`;
+
+              const partsResult = await sf_conn.query(
+                query,
+                function (queryErr, result) {
+                  if (queryErr) {
+                    return {
+                      status: 500,
+                    };
                   }
+
+                  const existingRecords = result.records;
+
+                  const partsToUpdateInSalesforce = [];
+                  const newPartsToInsertInSalesforce = [];
+
+                  if (existingRecords.length > 0) {
+                    participantsData.forEach((record) => {
+                      const existingRecord = existingRecords.find(
+                        (existing) => existing.TNS_Id__c === record.TNS_Id__c
+                      );
+
+                      if (existingRecord) {
+                        // If the record already exists, update it
+                        record.Id = existingRecord.Id;
+                        record.Resend_to_OpenFN__c = true;
+                        partsToUpdateInSalesforce.push(record);
+                      } else {
+                        // If the record does not exist, insert it
+                        newPartsToInsertInSalesforce.push(record);
+                      }
+                    });
+                  } else {
+                    newPartsToInsertInSalesforce.push(...participantsData);
+                  }
+
+                  // Update existing records
+                  const partsReturnedResult =
+                    partsToUpdateInSalesforce.length > 0
+                      ? sf_conn
+                          .sobject("Participant__c")
+                          .update(
+                            partsToUpdateInSalesforce,
+                            function (updateErr, updateResult) {
+                              if (updateErr) {
+                                return { status: 500 };
+                              }
+
+                              return {
+                                status: 200,
+                                data: updateResult,
+                              };
+                            }
+                          )
+                      : newPartsToInsertInSalesforce.length > 0
+                      ? sf_conn
+                          .sobject("Participant__c")
+                          .create(
+                            newPartsToInsertInSalesforce,
+                            function (insertErr, insertResult) {
+                              if (insertErr) {
+                                return console.error(insertErr);
+                              }
+
+                              return {
+                                status: 200,
+                                data: insertResult,
+                              };
+                            }
+                          )
+                      : { status: 200, data: [] };
+
+                  return partsReturnedResult;
+                }
+              );
+
+              // check if every item in partsResult has success:true
+              if (partsResult.length > 0) {
+                const success = partsResult.every(
+                  (result) => result.success === true
                 );
 
-              console.log(participantsRes);
+                if (success) {
+                  // check if uploads folder exists
+                  const uploadsFolder = join(
+                    getDirName(import.meta.url),
+                    "../../uploads"
+                  );
+
+                  if (!fs.existsSync(uploadsFolder)) {
+                    fs.mkdirSync(uploadsFolder);
+                  }
+
+                  // name file with user_id and date
+                  const newFilename = `participants-${Date.now()}${ext}`;
+                  stream = createReadStream();
+
+                  let serverFile = join(
+                    getDirName(import.meta.url),
+                    `../../uploads/${newFilename}`
+                  );
+
+                  let writeStream = createWriteStream(serverFile);
+
+                  await stream.pipe(writeStream);
+
+                  resolve({
+                    message: "Participants uploaded successfully",
+                    status: 200,
+                  });
+
+                  return;
+                }
+              }
+
+              resolve({
+                message: "Failed to upload new participants",
+                status: 500,
+              });
+
+              return;
             }
 
             resolve({
-              status: 200,
+              message: "Failed to upload new participants",
+              status: 500,
             });
           });
           stream.on("error", (error) => {
             reject({
+              message: "Failed to upload new participants",
               status: 500,
             });
           });
@@ -406,31 +670,9 @@ const ParticipantsResolvers = {
           const streamResult = await streamEndPromise;
 
           if (streamResult.status === 200) {
-            // check if uploads folder exists
-            const uploadsFolder = join(
-              getDirName(import.meta.url),
-              "../../uploads"
-            );
-
-            if (!fs.existsSync(uploadsFolder)) {
-              fs.mkdirSync(uploadsFolder);
-            }
-
-            // name file with user_id and date
-            const newFilename = `participants-${Date.now()}${ext}`;
-
-            let serverFile = join(
-              getDirName(import.meta.url),
-              `../../uploads/${newFilename}`
-            );
-
-            let writeStream = createWriteStream(serverFile);
-
-            await stream.pipe(writeStream);
-
             return {
-              message: "New Participants uploaded successfully",
-              status: 200,
+              message: streamResult.message,
+              status: streamResult.status,
             };
           }
 
