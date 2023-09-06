@@ -396,7 +396,7 @@ const ParticipantsResolvers = {
 
             const HHResult = await sf_conn.query(
               query,
-              function (queryErr, result) {
+              async function (queryErr, result) {
                 if (queryErr) {
                   return {
                     status: 500,
@@ -425,43 +425,39 @@ const ParticipantsResolvers = {
                   }
                 });
 
-                // Update existing records
-                const returnedResult =
-                  recordsToUpdateInSalesforce.length > 0
-                    ? sf_conn
-                        .sobject("Household__c")
-                        .update(
-                          recordsToUpdateInSalesforce,
-                          function (updateErr, updateResult) {
-                            if (updateErr) {
-                              return { status: 500 };
-                            }
+                const returnedResult1 = await sf_conn
+                  .sobject("Household__c")
+                  .update(
+                    recordsToUpdateInSalesforce,
+                    function (updateErr, updateResult) {
+                      if (updateErr) {
+                        return { status: 500 };
+                      }
 
-                            return {
-                              status: 200,
-                              data: updateResult,
-                            };
-                          }
-                        )
-                    : newRecordsToInsertInSalesforce.length > 0
-                    ? sf_conn
-                        .sobject("Household__c")
-                        .create(
-                          newRecordsToInsertInSalesforce,
-                          function (insertErr, insertResult) {
-                            if (insertErr) {
-                              return console.error(insertErr);
-                            }
+                      return {
+                        status: 200,
+                        data: updateResult,
+                      };
+                    }
+                  );
 
-                            return {
-                              status: 200,
-                              data: insertResult,
-                            };
-                          }
-                        )
-                    : { status: 200, data: [] };
+                const returnedResult2 = await sf_conn
+                  .sobject("Household__c")
+                  .create(
+                    newRecordsToInsertInSalesforce,
+                    function (insertErr, insertResult) {
+                      if (insertErr) {
+                        return { status: 500 };
+                      }
 
-                return returnedResult;
+                      return {
+                        status: 200,
+                        data: insertResult,
+                      };
+                    }
+                  );
+
+                return [...returnedResult1, ...returnedResult2];
               }
             );
 
@@ -534,7 +530,7 @@ const ParticipantsResolvers = {
 
               const partsResult = await sf_conn.query(
                 query,
-                function (queryErr, result) {
+                async function (queryErr, result) {
                   if (queryErr) {
                     return {
                       status: 500,
@@ -567,42 +563,39 @@ const ParticipantsResolvers = {
                   }
 
                   // Update existing records
-                  const partsReturnedResult =
-                    partsToUpdateInSalesforce.length > 0
-                      ? sf_conn
-                          .sobject("Participant__c")
-                          .update(
-                            partsToUpdateInSalesforce,
-                            function (updateErr, updateResult) {
-                              if (updateErr) {
-                                return { status: 500 };
-                              }
+                  const partsReturnedResult1 = await sf_conn
+                    .sobject("Participant__c")
+                    .update(
+                      partsToUpdateInSalesforce,
+                      function (updateErr, updateResult) {
+                        if (updateErr) {
+                          return { status: 500 };
+                        }
 
-                              return {
-                                status: 200,
-                                data: updateResult,
-                              };
-                            }
-                          )
-                      : newPartsToInsertInSalesforce.length > 0
-                      ? sf_conn
-                          .sobject("Participant__c")
-                          .create(
-                            newPartsToInsertInSalesforce,
-                            function (insertErr, insertResult) {
-                              if (insertErr) {
-                                return console.error(insertErr);
-                              }
+                        return {
+                          status: 200,
+                          data: updateResult,
+                        };
+                      }
+                    );
 
-                              return {
-                                status: 200,
-                                data: insertResult,
-                              };
-                            }
-                          )
-                      : { status: 200, data: [] };
+                  const partsReturnedResult2 = await sf_conn
+                    .sobject("Participant__c")
+                    .create(
+                      newPartsToInsertInSalesforce,
+                      function (insertErr, insertResult) {
+                        if (insertErr) {
+                          return console.error(insertErr);
+                        }
 
-                  return partsReturnedResult;
+                        return {
+                          status: 200,
+                          data: insertResult,
+                        };
+                      }
+                    );
+
+                  return [...partsReturnedResult1, ...partsReturnedResult2];
                 }
               );
 
