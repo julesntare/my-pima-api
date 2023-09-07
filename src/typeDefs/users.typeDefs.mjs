@@ -41,7 +41,6 @@ const usersTypeDefs = gql`
       user_email: String
       mobile_no: String
       role_id: ID
-      user_password: String
     ): UserResponse
 
     deleteUser(user_id: ID!): UserResponse

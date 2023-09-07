@@ -205,6 +205,66 @@ const UsersResolvers = {
         };
       }
     },
+
+    updateUser: async (
+      _,
+      { user_id, user_name, user_email, mobile_no, role_id }
+    ) => {
+      // check if user exists
+      const user = await Users.findOne({
+        where: { user_id },
+      });
+
+      if (!user) {
+        return {
+          message: "User not found",
+          status: 404,
+        };
+      }
+
+      // check if role exists
+      const role = await Roles.findOne({
+        where: { role_id },
+      });
+
+      if (!role) {
+        return {
+          message: "Role does not exist",
+          status: 400,
+        };
+      }
+
+      // if fields are not provided, use existing values
+      user_name = user_name || user.user_name;
+      user_email = user_email || user.user_email;
+      mobile_no = mobile_no || user.mobile_no;
+      role_id = role_id || user.role_id;
+
+      try {
+        await Users.update(
+          {
+            user_name,
+            user_email,
+            mobile_no,
+            role_id,
+          },
+          {
+            where: { user_id },
+          }
+        );
+
+        return {
+          message: "User updated successfully",
+          status: 200,
+        };
+      } catch (err) {
+        console.error(err);
+        return {
+          message: err.message,
+          status: err.status,
+        };
+      }
+    },
   },
 };
 
