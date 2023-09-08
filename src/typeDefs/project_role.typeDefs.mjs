@@ -3,9 +3,12 @@ import { gql } from "apollo-server-express";
 const ProjectRoleTypeDefs = gql`
   type ProjectRole {
     pr_id: ID
-    tbl_user: User
-    tbl_project: Projects
-    tbl_role: Roles
+    user_id: ID
+    user: User
+    project_id: ID
+    project: Projects
+    role_id: String
+    role: Roles
     createdAt: String
     updatedAt: String
   }

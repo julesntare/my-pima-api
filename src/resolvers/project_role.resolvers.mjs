@@ -93,7 +93,31 @@ const ProjectRoleResolvers = {
 
     getProjectRoles: async (_, __, {}) => {
       try {
-        const res = await ProjectRole.findAll();
+        const res = await ProjectRole.findAll({
+          include: [
+            {
+              model: Users,
+              as: "tbl_user",
+            },
+            {
+              model: Projects,
+              as: "tbl_project",
+            },
+            {
+              model: Roles,
+              as: "tbl_role",
+            },
+          ],
+        });
+
+        // map tbl_roles as role, tbl_users as user, tbl_projects as project
+        res.map((project_role) => {
+          project_role.role = project_role.tbl_role;
+          project_role.user = project_role.tbl_user;
+          project_role.project = project_role.tbl_project;
+
+          return project_role;
+        });
 
         return {
           message: "Project Role fetched successfully",
