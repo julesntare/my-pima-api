@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import Roles from "../models/roles.model.mjs";
 import Users from "../models/users.model.mjs";
 import bcrypt from "bcrypt";
+import ProjectRole from "../models/project_role.model.mjs";
 
 const UsersResolvers = {
   Query: {
@@ -71,7 +72,33 @@ const UsersResolvers = {
 
     getUsers: async () => {
       try {
-        const users = await Users.findAll();
+        const users = await Users.findAll({
+          include: [
+            {
+              model: Roles,
+            },
+          ],
+        });
+
+        // check in project role table if user is assigned to any project
+        // users.forEach(async (user) => {
+        //   const project = await ProjectRole.findOne({
+        //     where: { user_id: user.user_id },
+        //   });
+
+        //   if (project) {
+        //     user.project = project.project_id;
+        //   }
+
+        //   return user;
+        // });
+
+        // map tbl_roles in users as role
+        users.map((user) => {
+          user.role = user.tbl_role;
+          return user;
+        });
+
         return {
           message: "Users fetched successfully",
           status: 200,

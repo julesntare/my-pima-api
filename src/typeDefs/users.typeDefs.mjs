@@ -8,6 +8,7 @@ const usersTypeDefs = gql`
     user_email: String
     mobile_no: String
     role_id: String
+    role: Roles
     account_status: String
     createdAt: String
     updatedAt: String
