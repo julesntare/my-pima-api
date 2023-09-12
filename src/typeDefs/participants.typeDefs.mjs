@@ -14,6 +14,7 @@ const ParticipantsTypeDefs = gql`
     business_advisor: String!
     project_name: String!
     training_group: String!
+    household_id: String
   }
 
   type Query {
