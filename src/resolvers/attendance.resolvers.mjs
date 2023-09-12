@@ -1,5 +1,43 @@
 const AttendanceResolvers = {
   Query: {
+    getAttendances: async (_, __, { sf_conn }) => {
+      try {
+        const attendance = await sf_conn.query(
+          "SELECT Id, Name, Participant__c, Participant_Gender__c, Attended__c, Training_Session__c, Date__c FROM Attendance__c"
+        );
+
+        if (attendance.totalSize === 0) {
+          return {
+            message: "Attendance not found",
+            status: 404,
+          };
+        }
+
+        return {
+          message: "Attendance fetched successfully",
+          status: 200,
+          attendance: attendance.records.map((attendance) => {
+            return {
+              attendance_id: attendance.Id,
+              attendance_name: attendance.Name,
+              participant_id: attendance.Participant__c,
+              attendance_date: attendance.Date__c,
+              attendance_status:
+                attendance.Attended__c === 1 ? "Present" : "Absent",
+              session_id: attendance.Training_Session__c,
+            };
+          }),
+        };
+      } catch (error) {
+        console.log(error);
+
+        return {
+          message: error.message,
+          status: error.status,
+        };
+      }
+    },
+
     getAttendanceByParticipant: async (_, { participant_id }, { sf_conn }) => {
       try {
         const attendance = await sf_conn.query(
