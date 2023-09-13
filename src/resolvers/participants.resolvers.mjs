@@ -20,7 +20,7 @@ const ParticipantsResolvers = {
         }
 
         const participants = await sf_conn.query(
-          "SELECT Id, Participant_Full_Name__c, Gender__c, Training_Group__r.Project_Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId, Household__c FROM Participant__c WHERE Project__c = '" +
+          "SELECT Id, Participant_Full_Name__c, Gender__c, Training_Group__r.Project_Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId, Household__c, Primary_Household_Member__c FROM Participant__c WHERE Project__c = '" +
             project.project_name +
             "'"
         );
@@ -104,6 +104,7 @@ const ParticipantsResolvers = {
               project_name: participant.Project__c,
               training_group: participant.Training_Group__c,
               household_id: participant.Household__c,
+              primary_household_member: participant.Primary_Household_Member__c,
             };
           }),
         };
@@ -132,7 +133,7 @@ const ParticipantsResolvers = {
         }
 
         const participants = await sf_conn.query(
-          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId, Household__c FROM Participant__c WHERE Training_Group__c = '" +
+          "SELECT Id, Participant_Full_Name__c, Gender__c, Location__c, TNS_Id__c, Status__c, Trainer_Name__c, Project__c, Training_Group__c, Training_Group__r.Responsible_Staff__r.ReportsToId, Household__c, Primary_Household_Member__c FROM Participant__c WHERE Training_Group__c = '" +
             tg_id +
             "'"
         );
@@ -216,6 +217,7 @@ const ParticipantsResolvers = {
               project_name: participant.Project__c,
               training_group: participant.Training_Group__c,
               household_id: participant.Household__c,
+              primary_household_member: participant.Primary_Household_Member__c,
             };
           }),
         };

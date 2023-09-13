@@ -15,6 +15,7 @@ const ParticipantsTypeDefs = gql`
     project_name: String!
     training_group: String!
     household_id: String
+    primary_household_member: String
   }
 
   type Query {
