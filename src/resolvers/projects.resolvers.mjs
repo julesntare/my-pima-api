@@ -196,7 +196,7 @@ const ProjectsResolvers = {
           message: "Project Statistics fetched successfully",
           status: 200,
           statistics: {
-            total_bas: total_stats.records[0].Active_BAs__c,
+            total_bas: total_stats.records[0].of_Business_Advisors_total__c,
             total_fts: total_stats.records[0].Active_FTs__c,
           },
         };
