@@ -70,7 +70,7 @@ const FarmVisitsResolvers = {
         console.log(err);
 
         return {
-          message: err.message,
+          message: "Something went wrong",
           status: err.status,
         };
       }
