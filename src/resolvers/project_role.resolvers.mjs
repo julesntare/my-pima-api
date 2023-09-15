@@ -245,11 +245,12 @@ const ProjectRoleResolvers = {
   },
 
   Mutation: {
-    addProjectRole: async (_, { user_id, project_id }, {}) => {
+    addProjectRole: async (_, { user_id, project_id, role_id }, {}) => {
       try {
         // Check if user exists
         const user = await Users.findByPk(user_id);
         const project = await Projects.findByPk(project_id);
+        const role = await Roles.findByPk(role_id);
 
         if (!user) {
           return {
@@ -261,6 +262,13 @@ const ProjectRoleResolvers = {
         if (!project) {
           return {
             message: "Project not found",
+            status: 404,
+          };
+        }
+
+        if (!role) {
+          return {
+            message: "Role not found",
             status: 404,
           };
         }
@@ -283,7 +291,7 @@ const ProjectRoleResolvers = {
         const res = await ProjectRole.create({
           user_id,
           project_id,
-          role: "afd4cf48-4a81-41bb-939e-1faff919c04d",
+          role: role_id || role.find((r) => r.role_name === "standard").role_id,
         });
 
         return {
@@ -301,7 +309,11 @@ const ProjectRoleResolvers = {
       }
     },
 
-    updateProjectRole: async (_, { pr_id, user_id, project_id }, {}) => {
+    updateProjectRole: async (
+      _,
+      { pr_id, user_id, project_id, role_id },
+      {}
+    ) => {
       // Check if project_role exists
       const project_role = await ProjectRole.findByPk(pr_id);
 
@@ -315,6 +327,7 @@ const ProjectRoleResolvers = {
       // Check if user exists
       const user = await Users.findByPk(user_id);
       const project = await Projects.findByPk(project_id);
+      const role = await Roles.findByPk(role_id);
 
       if (!user) {
         return {
@@ -330,6 +343,13 @@ const ProjectRoleResolvers = {
         };
       }
 
+      if (!role) {
+        return {
+          message: "Role not found",
+          status: 404,
+        };
+      }
+
       // check if user and project combination already exists
       const projectRoleExists = await ProjectRole.findOne({
         where: {
@@ -338,9 +358,9 @@ const ProjectRoleResolvers = {
         },
       });
 
-      if (projectRoleExists) {
+      if (!projectRoleExists) {
         return {
-          message: "Project Role already exists",
+          message: "Project Role does not exists",
           status: 400,
         };
       }
@@ -349,11 +369,11 @@ const ProjectRoleResolvers = {
         const res = await ProjectRole.update(
           {
             user_id,
-            project_id,
+            role_id,
           },
           {
             where: {
-              pr_id,
+              project_id,
             },
           }
         );

@@ -28,10 +28,9 @@ const ProjectRoleTypeDefs = gql`
       role_id: String
     ): ProjectRoleResponse
     updateProjectRole(
-      pr_id: ID!
       user_id: ID!
       project_id: ID!
-      role_id: String
+      role_id: String!
     ): ProjectRoleResponse
     deleteProjectRole(pr_id: ID!): ProjectRoleResponse
   }
