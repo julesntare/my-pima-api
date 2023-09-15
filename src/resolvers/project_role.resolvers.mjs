@@ -219,6 +219,15 @@ const ProjectRoleResolvers = {
           };
         }
 
+        // map tbl_roles as role, tbl_users as user, tbl_projects as project
+        res.map((project_role) => {
+          project_role.role = project_role.tbl_role;
+          project_role.user = project_role.tbl_user;
+          project_role.project = project_role.tbl_project;
+
+          return project_role;
+        });
+
         return {
           message: "Project Role fetched successfully",
           status: 200,
