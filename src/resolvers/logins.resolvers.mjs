@@ -13,9 +13,9 @@ const LoginsResolvers = {
   Query: {
     getLogins: async () => {
       try {
-        const logins = await UserSessions.findAll(
-          { attributes: { exclude: ["updatedAt"] } }
-        );
+        const logins = await UserSessions.findAll({
+          attributes: { exclude: ["updatedAt"] },
+        });
         return {
           message: "Logins fetched successfully",
           status: 200,

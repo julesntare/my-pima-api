@@ -13,7 +13,7 @@ const TrainingSessionsTypeDefs = gql`
     total_females: Int
     session_image: String
     is_verified: Boolean
-    validation_status: String
+    validation_status: Boolean
     session_date: String
   }
 
