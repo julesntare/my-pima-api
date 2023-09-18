@@ -44,6 +44,8 @@ const usersTypeDefs = gql`
       role_id: ID
     ): UserResponse
 
+    forgotPassword(user_email: String!): UserResponse
+
     deleteUser(user_id: ID!): UserResponse
   }
 

@@ -2,7 +2,20 @@ import { Op } from "sequelize";
 import Roles from "../models/roles.model.mjs";
 import Users from "../models/users.model.mjs";
 import bcrypt from "bcrypt";
-import ProjectRole from "../models/project_role.model.mjs";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+import sendEmail from "../utils/sendMail.mjs";
+import Verifications from "../models/verifications.model.mjs";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "julesntare@gmail.com",
+    pass: "mdrxhobifrtyipof",
+  },
+});
+
+dotenv.config();
 
 const UsersResolvers = {
   Query: {
@@ -291,6 +304,69 @@ const UsersResolvers = {
           status: err.status,
         };
       }
+    },
+
+    forgotPassword: async (_, { user_email }) => {
+      // check if user exists
+      const user = await Users.findOne({
+        where: { user_email },
+      });
+
+      if (!user) {
+        return {
+          message: "User not found",
+          status: 404,
+        };
+      }
+
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+
+      const mailOptions = {
+        from: "julesntare@gmail.com",
+        to: user.user_email,
+        subject: "Password Reset",
+        html: `
+          <p>Dear ${user.user_name || "User"},</p>
+          <p>Please enter below code in reset page to reset your password:</p>
+          <br />
+          <p>Verification code: <em>${randomNum}</em></p>
+          <p>The code expires in 24 hours.</p>
+          <br />
+          <p>Regards,</p>
+          <p>TechnoServe, My PIMA Team</p>
+          `,
+      };
+
+      // Send the email
+      const result = await sendEmail(mailOptions, transporter)
+        .then(async (res) => {
+          // delete existing verification code
+          await Verifications.destroy({
+            where: { user_id: user.user_id },
+          });
+
+          // generate random 6 numbers and save to tbl_verifications, and expire in 24 hours
+          await Verifications.create({
+            user_id: user.user_id,
+            verification_code: randomNum,
+            expiry_time: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          });
+
+          return {
+            message: "Password reset link sent successfully",
+            status: 200,
+          };
+        })
+        .catch((err) => {
+          console.log(err);
+
+          return {
+            message: "Something went wrong",
+            status: 500,
+          };
+        });
+
+      return result;
     },
   },
 };
