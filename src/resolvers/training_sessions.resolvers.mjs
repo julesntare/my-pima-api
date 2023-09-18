@@ -227,7 +227,7 @@ const TrainingSessionsResolvers = {
         const res = await sf_conn.sobject("Training_Session__c").update(
           {
             Id: ts_id,
-            Data_Verification__c: status,
+            Data_Verification__c: status === valid_statuses[1] ? true : false,
             Verified__c: status === valid_statuses[0] ? false : true,
           },
           function (err, ret) {
