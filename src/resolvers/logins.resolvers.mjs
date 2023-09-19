@@ -4,6 +4,7 @@ import Users from "../models/users.model.mjs";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Roles from "../models/roles.model.mjs";
 
 dotenv.config();
 
@@ -47,6 +48,9 @@ const LoginsResolvers = {
           where: {
             user_email: googleEmail,
           },
+          include: {
+            model: Roles,
+          },
         });
 
         if (user) {
@@ -60,6 +64,8 @@ const LoginsResolvers = {
             user_id: user.user_id,
             session_token: jwt_token,
           });
+
+          user.role = user.tbl_role;
 
           return {
             message: "Authenticated Successful!",
@@ -85,7 +91,12 @@ const LoginsResolvers = {
 
     saveMailLogin: async (_, { email, password }) => {
       // check if email exists
-      const user = await Users.findOne({ where: { user_email: email } });
+      const user = await Users.findOne({
+        where: { user_email: email },
+        include: {
+          model: Roles,
+        },
+      });
 
       if (!user) {
         return {
@@ -115,6 +126,8 @@ const LoginsResolvers = {
         session_token: token,
         provider: "tns",
       });
+
+      user.role = user.tbl_role;
 
       return {
         message: "Login added successfully",
