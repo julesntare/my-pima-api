@@ -1,3 +1,5 @@
+import fetchImage from "../utils/commCareApi.mjs";
+
 const FVBestPracticesResolvers = {
   Query: {
     getFVBestPracticesByFarmVisits: async (_, { fv_id }, { sf_conn }) => {
@@ -56,21 +58,21 @@ const FVBestPracticesResolvers = {
             ],
             answers: [
               bp.number_of_main_stems_on_majority_trees__c,
-              bp.photo_of_trees_and_average_main_stems__c,
+              await fetchImage(bp.photo_of_trees_and_average_main_stems__c),
               bp.health_of_new_planting_choice__c,
               bp.Color_of_coffee_tree_leaves__c,
               bp.how_many_weeds_under_canopy_and_how_big__c,
-              bp.photo_of_weeds_under_the_canopy__c,
-              bp.take_a_photo_of_erosion_control__c,
+              await fetchImage(bp.photo_of_weeds_under_the_canopy__c),
+              await fetchImage(bp.take_a_photo_of_erosion_control__c),
               bp.level_of_shade_present_on_the_farm__c,
-              bp.photo_of_level_of_shade_on_the_plot__c,
+              await fetchImage(bp.photo_of_level_of_shade_on_the_plot__c),
               bp.planted_intercrop_bananas__c,
-              bp.photograph_intercrop_bananas__c,
+              await fetchImage(bp.photograph_intercrop_bananas__c),
               bp.do_you_have_a_record_book__c,
               bp.are_there_records_on_the_record_book__c,
-              bp.take_a_photo_of_the_record_book__c,
+              await fetchImage(bp.take_a_photo_of_the_record_book__c),
               bp.do_you_have_compost_manure__c,
-              bp.photo_of_the_compost_manure__c,
+              await fetchImage(bp.photo_of_the_compost_manure__c),
             ],
             best_practice_adopted: bp.Best_Practice_Adoption__c,
           },

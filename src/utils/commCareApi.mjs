@@ -1,6 +1,8 @@
 import axios from "axios";
 
 const fetchImage = async (url) => {
+  if (!url) return null;
+
   try {
     // fetch from url with authorization
     const response = await axios.get(url, {
