@@ -1,7 +1,7 @@
 import { gql } from "apollo-server-express";
 
-const FVBestPracticesTypeDefs = gql`
-  type FVBestPractices {
+const FVQAsTypeDefs = gql`
+  type FVQAs {
     bp_id: String!
     fv_id: String!
     practice_name: String!
@@ -11,14 +11,14 @@ const FVBestPracticesTypeDefs = gql`
   }
 
   type Query {
-    getFVBestPracticesByFarmVisits(fv_id: String!): AllFVBestPracticesResponse
+    getFVQAsByFarmVisits(fv_id: String!): AllFVQAsResponse
   }
 
-  type AllFVBestPracticesResponse {
+  type AllFVQAsResponse {
     message: String!
     status: Int!
-    fvBestPractices: FVBestPractices
+    fvQAs: FVQAs
   }
 `;
 
-export default FVBestPracticesTypeDefs;
+export default FVQAsTypeDefs;

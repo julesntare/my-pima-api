@@ -1,8 +1,8 @@
 import fetchImage from "../utils/commCareApi.mjs";
 
-const FVBestPracticesResolvers = {
+const FVQAsResolvers = {
   Query: {
-    getFVBestPracticesByFarmVisits: async (_, { fv_id }, { sf_conn }) => {
+    getFVQAsByFarmVisits: async (_, { fv_id }, { sf_conn }) => {
       try {
         // check if training group exists by tg_id
         const farm_visit = await sf_conn.query(
@@ -16,25 +16,25 @@ const FVBestPracticesResolvers = {
           };
         }
 
-        const fvBestPractices = await sf_conn.query(
+        const fvQAs = await sf_conn.query(
           "SELECT Id, Name, Best_Practice_Adoption__c, Farm_Visit__c, number_of_main_stems_on_majority_trees__c, photo_of_trees_and_average_main_stems__c, health_of_new_planting_choice__c, Color_of_coffee_tree_leaves__c, how_many_weeds_under_canopy_and_how_big__c, photo_of_weeds_under_the_canopy__c, take_a_photo_of_erosion_control__c, level_of_shade_present_on_the_farm__c, photo_of_level_of_shade_on_the_plot__c, planted_intercrop_bananas__c, photograph_intercrop_bananas__c, do_you_have_a_record_book__c, are_there_records_on_the_record_book__c, take_a_photo_of_the_record_book__c, do_you_have_compost_manure__c, photo_of_the_compost_manure__c FROM FV_Best_Practices__c WHERE Farm_Visit__c = '" +
             fv_id +
             "'"
         );
 
-        if (fvBestPractices.totalSize === 0) {
+        if (fvQAs.totalSize === 0) {
           return {
             message: "Best Practice not found",
             status: 404,
           };
         }
 
-        const bp = fvBestPractices.records[0];
+        const bp = fvQAs.records[0];
 
         return {
           message: "Best Practices fetched successfully",
           status: 200,
-          fvBestPractices: {
+          fvQAs: {
             bp_id: bp.Id,
             fv_id: bp.Farm_Visit__c,
             practice_name: bp.Name,
@@ -89,4 +89,4 @@ const FVBestPracticesResolvers = {
   },
 };
 
-export default FVBestPracticesResolvers;
+export default FVQAsResolvers;
