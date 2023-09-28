@@ -17,6 +17,7 @@ const FarmVisitsTypeDefs = gql`
   type Query {
     getFarmVisitsByProject(project_id: String!): AllFarmVisitsResponse
     getFarmVisitsByGroup(tg_id: String!): AllFarmVisitsResponse
+    getFarmVisitsBySession(ts_id: String!): AllFarmVisitsResponse
     getFarmVisitsByParticipant(part_id: String!): AllFarmVisitsResponse
   }
 
