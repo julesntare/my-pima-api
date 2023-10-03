@@ -4,10 +4,7 @@ const FVQAsTypeDefs = gql`
   type FVQAs {
     bp_id: String!
     fv_id: String!
-    practice_name: String!
-    questions: [String]
-    answers: [String]
-    best_practice_adopted: String
+    qas: [QA]
   }
 
   type Query {
@@ -18,6 +15,12 @@ const FVQAsTypeDefs = gql`
     message: String!
     status: Int!
     fvQAs: FVQAs
+  }
+
+  type QA {
+    practice_name: String!
+    questions: [String]
+    answers: [String]
   }
 `;
 

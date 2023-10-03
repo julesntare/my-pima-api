@@ -1,0 +1,1264 @@
+{
+    "info": {
+        "_postman_id": "3da64201-2c55-4358-96b2-4990a47285f8",
+        "name": "my-pima-api-collection",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "projects-requests",
+            "item": [
+                {
+                    "name": "Get All Projects",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "https://api.pima.ink/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "https",
+                            "host": [
+                                "api",
+                                "pima",
+                                "ink"
+                            ]
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjects {\n    message\n    status\n    projects {\n      project_id\n      sf_project_id\n      project_name\n      project_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Load SalesForce Projects",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  loadProjects {\n    message\n    status\n    total_new_projects\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific Project Info",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectById(project_id: \"abf017e1-8356-4cf9-adae-4936edb84269\") {\n    message\n    status\n    project {\n      project_id\n      sf_project_id\n      project_name\n      project_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific Project BAs",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectBusinessAdvisors(project_id: \"abf017e1-8356-4cf9-adae-4936edb84269\") {\n    message\n    status\n    leaders {\n      name\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific Project FTs",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectFarmerTrainers(project_id: \"abf017e1-8356-4cf9-adae-4936edb84269\") {\n    message\n    status\n    leaders {\n      name\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific Project Statistics",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectStatistics(sf_project_id: \"a0E7S0000009KjZUAU\") {\n    message\n    status\n    statistics {\n      total_bas\n      total_fts\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Assigned Projects",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectsAssigned(user_id: \"b63d02a2-7366-4194-8b69-46f2aff88512\") {\n    message\n    status\n    projects {\n      project_id\n      sf_project_id\n      project_name\n      project_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "authentication-requests",
+            "item": [
+                {
+                    "name": "Get All Logins",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getLogins {\n    message\n    status\n    logins {\n      session_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Google Authenticate",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  saveGoogleLogin(\n    token: \"eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk5YmNiMDY5MzQwYTNmMTQ3NDYyNzk0ZGZlZmE3NWU3OTk2MTM2MzQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODgwMjYxMDksImF1ZCI6IjE0NTY3MjE3MDM5My0zdTNiaTU0aTV2MzJyZDBqOHMyaWUzNmxrMGUzNDI1dS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwOTQzODk0MDI4MDEwNDk1OTUyMyIsImVtYWlsIjoianVsZXNudGFyZUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiMTQ1NjcyMTcwMzkzLTN1M2JpNTRpNXYzMnJkMGo4czJpZTM2bGswZTM0MjV1LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwibmFtZSI6Ikp1bGVzIE50YXJlIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGZCN0Rna0s4ZXFyYlJ4YThadG5ROG5jVnJoeEpfS1NhOGdBTU9acy1UV05GYz1zOTYtYyIsImdpdmVuX25hbWUiOiJKdWxlcyIsImZhbWlseV9uYW1lIjoiTnRhcmUiLCJpYXQiOjE2ODgwMjY0MDksImV4cCI6MTY4ODAzMDAwOSwianRpIjoiZGY2NmY5ZTc2YTM1YWI2OWNlNWJkYWI5NDkxMWU5MDYyYzRkMjViYyJ9.EWdaFs_d7zAo8UZtmClDsYED0X_mt43aaVWPkjPfr2e6Bbe4cDoEYMczAXpraRJP8sV96vIOfR5jdD9hmK3LE-83CugkdbovhjVCNJySs7utzxllbp-CHGtZYaX9JFb9TRz2Qzok-rVtRn1LI27y1oPA419nyGASp9yuppTueKvXUHvBzeAOgO0c-rcfqpRltEiq-oNeeFHFQqSN32qmIQRBZ22TI-aZ0S88OnhV0p-jaTlxbcF-blYZ8rOwC4vX20ZBwrufhxzRhMu5xTv09GuNsSvjF1lSN8JEGNpkRWKvUeqQ0-9g6O1ZELpKY5RiccHreLDbZIzIM0FQvtGhsQ\"\n  ) {\n    message\n    status\n    user {\n      user_id\n      user_name\n      user_email\n    }\n    token\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "User Mail/Password Authenticate",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  saveMailLogin(email: \"0jntare@tns.org\", password: \"JN123\") {\n    message\n    status\n    user {\n      user_id\n      sf_user_id\n      user_name\n      user_email\n      role_id\n      role {\n        role_name\n      }\n    }\n    token\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Verify Token",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "https://my-pima-api.onrender.com/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "https",
+                            "host": [
+                                "my-pima-api",
+                                "onrender",
+                                "com"
+                            ]
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  verifyToken(\n    token: \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYjYzZDAyYTItNzM2Ni00MTk0LThiNjktNDZmMmFmZjg4NTEyIiwiaWF0IjoxNjg4MDI3NDA0fQ.g40tU4Uz-VdGpk1jGb_SULmtnexwlt5V2Lv4itK34CY\"\n  ) {\n    message\n    status\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "permissions-requests",
+            "item": [
+                {
+                    "name": "Get All Permissions",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getPermissions {\n    message\n    status\n    permissions {\n      perm_id\n      perm_name\n      perm_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific Permission",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getPermission(perm_id: \"63078e60-9a21-48e4-81fb-037797608842\") {\n    message\n    status\n    permission {\n      perm_id\n      perm_name\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Permissions Per Role",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getPermissionsByRole(role_id: \"d7ca787c-68d3-4164-b416-212b2aea8445\") {\n    message\n    status\n    permissions {\n      perm_id\n      perm_name\n      perm_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Create a Permission",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  addPermission(\n    perm_name: \"reg_participants\"\n    perm_desc: \"permission for registrering participants\"\n  ) {\n    message\n    status\n    permission {\n      perm_id\n      perm_name\n      perm_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Update a Permission",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  updatePermission(\n    perm_id: \"d2df4225-0e83-451c-9e76-72a47b18f05d\"\n    perm_name: \"execute\"\n    perm_desc: \"role to run certain scripts\"\n    perm_status: \"inactive\"\n  ) {\n    message\n    status\n    permission {\n      perm_id\n      perm_name\n      perm_status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Delete a Permission",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  deletePermission(perm_id: \"d2df4225-0e83-451c-9e76-72a47b18f05d\") {\n    message\n    status\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "roles-requests",
+            "item": [
+                {
+                    "name": "Get All Roles",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getRoles {\n    message\n    status\n    roles {\n      role_id\n      role_name\n      role_desc\n      permissions\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific Role",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getRole(role_id: \"afd4cf48-4a81-41bb-939e-1faff919c04d\") {\n    message\n    status\n    role {\n      role_id\n      role_name\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Create a Role",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  addRole(\n    role_name: \"farmer_trainer\"\n    role_desc: \"Role for Farmer Trainers\"\n    permissions: [\"63078e60-9a21-48e4-81fb-037797608842\"]\n    is_default: false\n  ) {\n    message\n    status\n    role {\n      role_id\n      role_name\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Delete a Role",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  deleteRole(role_id: \"afd4cf48-4a81-41bb-939e-1faff919c04d\") {\n    message\n    status\n    role {\n      role_id\n      role_name\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Update a Role",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  updateRole(\n    role_id: \"afd4cf48-4a81-41bb-939e-1faff919c04d\"\n    role_name: \"standard\"\n  ) {\n    message\n    status\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "users-requests",
+            "item": [
+                {
+                    "name": "Load Users From SF",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  loadSFUsers {\n    message\n    status\n    total_new_users\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getUsers {\n    message\n    status\n    users {\n      user_id\n      sf_user_id\n      user_name\n      user_email\n      mobile_no\n      role_id\n      role {role_name}\n      account_status\n      createdAt\n      updatedAt\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Create a User",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6000/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6000"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  addUser(\n    user_name: \"jules ntare\"\n    user_email: \"julesntare@gmail.com\"\n    mobile_no: \"0780674453\"\n    user_password: \"JN123\"\n  ) {\n    message\n    status\n    user {\n      user_id\n      user_name\n      user_email\n      role_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific User",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getUserById(user_id: \"b0d20a69-54d1-4c9c-9f11-b5d1942e4454\") {\n    message\n    status\n    user {\n      user_id\n      user_name\n      user_email\n      mobile_no\n      role_id\n      account_status\n      createdAt\n      updatedAt\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specific User By SF Id",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getUserBySFId(sf_user_id: \"0037S000003MlDLQA0\") {\n    message\n    status\n    user {\n      user_id\n      user_name\n      user_email\n      mobile_no\n      role_id\n      account_status\n      createdAt\n      updatedAt\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Forgot Password",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  forgotPassword(user_email: \"0jntare@tns.org\") {\n    message\n    status\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "training_groups-requests",
+            "item": [
+                {
+                    "name": "Get Training Groups By Project",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  trainingGroupsByProject(project_id: \"a0EOj0000001h1JMAQ\") {\n    message\n    status\n    trainingGroups {\n      tg_id\n      tg_name\n      tns_id\n      total_participants\n      farmer_trainer\n      business_advisor\n      status\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "project_role-requests",
+            "item": [
+                {
+                    "name": "Get Assigned Project Roles",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectRoles {\n    message\n    status\n    project_role {\n      pr_id\n      user_id\n      user {\n        user_id\n      }\n      project_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Project Role By Id",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectRoleById(pr_id: \"cadaa608-288e-40d8-bf4a-e9a4f24593ab\") {\n    message\n    status\n    project_role {\n      pr_id\n      user_id\n      project_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Project Roles By User Id",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectRolesByUserId(user_id: \"2723c292-a186-48dc-8a92-69ece5f434fa\") {\n    message\n    status\n    project_role {\n      pr_id\n      user_id\n      project_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Create Project Role",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  addProjectRole(user_id: \"b63d02a2-7366-4194-8b69-46f2aff88512\", project_id: \"c8c8c0a0-a0c5-492a-921f-c3f5662cc09a\") {\n    message\n    status\n    project_role {\n      pr_id\n      user_id\n      project_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Load SF Project Roles",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  loadProjectRoles {\n    message\n    status\n    total_loaded\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Project Roles By Project Id",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getProjectRolesByProjectId(project_id: \"1ebb3843-34da-4d54-99fe-af0a9670b4a3\") {\n    message\n    status\n    project_role {\n      pr_id\n      user {\n        user_name\n      }\n      project {\n        project_name\n      }\n      role {\n        role_name\n      }\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "training_sessions-requests",
+            "item": [
+                {
+                    "name": "Get All Sessions Per TG",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  trainingSessionsByGroup(tg_id: \"a0J7S000000IHilUAG\") {\n    message\n    status\n    trainingSessions {\n      ts_id\n      ts_name\n      ts_module\n      farmer_trainer\n      ts_status\n      total_males\n      total_females\n      has_image\n      is_verified\n      validation_status\n      session_date\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Sessions",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "https://api.pima.ink/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "https",
+                            "host": [
+                                "api",
+                                "pima",
+                                "ink"
+                            ]
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  trainingSessions {\n    message\n    status\n    trainingSessions {\n      ts_id\n      ts_name\n      ts_module\n      ts_group\n      ts_status\n      total_males\n      total_females\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Sessions Per Project",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  trainingSessionsByProject(sf_project_id: \"a0EOj0000001h1JMAQ\") {\n    message\n    status\n    trainingSessions {\n      ts_id\n      ts_name\n      ts_module\n      ts_group\n      tns_id\n      farmer_trainer\n      ts_status\n      total_males\n      total_females\n      has_image\n      is_verified\n      validation_status\n      session_date\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Session Image",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  trainingSessionImage(ts_id: \"a0L9J000001X77jUAC\") {\n    message\n    status\n    trainingSessionImage\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Verify Session",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "mutation {\n  validateSession(ts_id: \"a0L9J000000v4CDUAY\", status: \"not_verified\") {\n    message\n    status\n    trainingSession {\n      ts_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "participants-requests",
+            "item": [
+                {
+                    "name": "Get Participants by Project Name",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getParticipantsByProject(project_id: \"a0E7S000000lCMJUA2\") {\n    message\n    status\n    participants {\n      p_id\n      full_name\n      gender\n      location\n      tns_id\n      status\n      farmer_trainer\n      business_advisor\n      project_name\n      training_group\n      household_id\n      primary_household_member\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Participants by TG",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getParticipantsByGroup(tg_id: \"a0J9J000000tcj7UAA\") {\n    message\n    status\n    participants {\n      p_id\n      full_name\n      gender\n      location\n      tns_id\n      status\n      farmer_trainer\n      business_advisor\n      project_name\n      training_group\n      household_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "attendance-requests",
+            "item": [
+                {
+                    "name": "Get Attendance by Participant",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getAttendanceByParticipant(participant_id: \"a0A9J000000QLbAUAW\") {\n    message\n    status\n    attendance {\n      attendance_id\n      participant_id\n      attendance_name\n      attendance_date\n      attendance_status\n      session_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Attendance by Session",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getAttendanceBySession(session_id: \"a0L9J000001IQ2VUAW\") {\n    message\n    status\n    attendance {\n      attendance_id\n      participant_id\n      attendance_name\n      attendance_date\n      attendance_status\n      session_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Attendance Statistics By Session",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getAttendanceStatisticsBySession(session_id: \"a0L9J000001IPyoUAG\") {\n    message\n    status\n    attendance_statistics {\n      total_attendance\n      total_present\n      total_absent\n      male_present\n      female_present\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Attendances",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getAttendances {\n    message\n    status\n    attendance {\n      attendance_id\n      participant_id\n      attendance_name\n      attendance_date\n      attendance_status\n      session_id\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "farm_visits-requests",
+            "item": [
+                {
+                    "name": "Get Farm Visits by Project",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getFarmVisitsByProject(project_id: \"a0E9J000000KrqmUAC\") {\n    message\n    status\n    farmVisits {\n      fv_id\n      fv_name\n      training_group\n      training_session\n      tns_id\n      farm_visited\n      household_id\n      farmer_trainer\n      has_training\n      date_visited\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Farm Visits by TG",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getFarmVisitsByGroup(tg_id: \"a0J7S000000IHl7UAG\") {\n    message\n    status\n    farmVisits {\n      fv_id\n      fv_name\n      training_group\n      training_session\n      tns_id\n      farm_visited\n      household_id\n      farmer_trainer\n      has_training\n      date_visited\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Farm Visits by Participant",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getFarmVisitsByParticipant(part_id: \"a0A9J0000003PeQUAU\") {\n    message\n    status\n    farmVisits {\n      fv_id\n      fv_name\n      training_group\n      training_session\n      tns_id\n      farm_visited\n      household_id\n      farmer_trainer\n      has_training\n      date_visited\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Get Farm Visits by TS",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getFarmVisitsBySession(ts_id: \"a0L9J000001X770UAC\") {\n    message\n    status\n    farmVisits {\n      fv_id\n      fv_name\n      training_group\n      training_session\n      tns_id\n      farm_visited\n      household_id\n      farmer_trainer\n      has_training\n      date_visited\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "fv_best_practices-requests",
+            "item": [
+                {
+                    "name": "Get Best Practices by FV",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:6500/graphql",
+                            "path": [
+                                "graphql"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "6500"
+                        },
+                        "body": {
+                            "mode": "graphql",
+                            "graphql": {
+                                "query": "{\n  getFVBestPracticesByFarmVisits(fv_id: \"a149J000000DJx9QAG\") {\n    message\n    status\n    fvBestPractices {\n      bp_id\n      fv_id\n      practice_name\n      questions\n      answers\n      best_practice_adopted\n    }\n  }\n}"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Initial Request",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "https://api.pima.ink/api",
+                    "path": [
+                        "api"
+                    ],
+                    "protocol": "https",
+                    "host": [
+                        "api",
+                        "pima",
+                        "ink"
+                    ]
+                }
+            }
+        }
+    ]
+}
