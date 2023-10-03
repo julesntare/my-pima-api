@@ -60,6 +60,10 @@ const FVQAsResolvers = {
                   "What is the health of the new planting choice?",
                   "What is the color of the coffee tree leaves?",
                 ],
+                answers: [
+                  bp.health_of_new_planting_choice__c,
+                  bp.color_of_coffee_tree_leaves__c,
+                ],
               },
               {
                 practice_name: "Nutrition",
