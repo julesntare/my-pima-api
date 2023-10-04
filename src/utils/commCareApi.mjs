@@ -18,7 +18,7 @@ const fetchImage = async (url) => {
     const base64encodedData = base64encode(resText);
 
     // Send the base64 data to the frontend
-    return base64encodedData;
+    return `data:image/png;base64,${base64encodedData}`;
   } catch (error) {
     return null;
   }

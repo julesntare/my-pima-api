@@ -11,6 +11,14 @@ const FVQAsTypeDefs = gql`
     getFVQAsByFarmVisits(fv_id: String!): AllFVQAsResponse
   }
 
+  type Mutation {
+    updateFVQAImageStatus(
+      bp_id: String!
+      field_name: FieldNames!
+      image_status: Status!
+    ): FVQAsResponse
+  }
+
   type AllFVQAsResponse {
     message: String!
     status: Int!
@@ -21,6 +29,31 @@ const FVQAsTypeDefs = gql`
     practice_name: String!
     questions: [String]
     answers: [String]
+  }
+
+  type FVQAsResponse {
+    message: String!
+    status: Int!
+    fvQA: FVQAs
+  }
+
+  enum Status {
+    not_verified
+    approved
+    rejected
+  }
+
+  enum FieldNames {
+    MainStems
+    Pruning
+    HealthofNewPlanting
+    Nutrition
+    Weeding
+    IPDM
+    ErosionControl
+    Shade
+    RecordBook
+    Compost
   }
 `;
 
