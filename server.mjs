@@ -39,6 +39,8 @@ import FarmVisitsResolvers from "./src/resolvers/farm_visits.resolvers.mjs";
 import { getDirName } from "./src/utils/getDirName.mjs";
 import FVQAsTypeDefs from "./src/typeDefs/fv_qas.typeDefs.mjs";
 import FVQAsResolvers from "./src/resolvers/fv_qas.resolvers.mjs";
+import TrainingModulesTypeDefs from "./src/typeDefs/training_modules.typeDefs.mjs";
+import TrainingModulesResolvers from "./src/resolvers/training_modules.resolvers.mjs";
 
 const app = express();
 
@@ -129,6 +131,7 @@ const server = new ApolloServer({
     AttendanceTypeDefs,
     FarmVisitsTypeDefs,
     FVQAsTypeDefs,
+    TrainingModulesTypeDefs
   ],
   resolvers: [
     PermissionsResolvers,
@@ -143,6 +146,7 @@ const server = new ApolloServer({
     AttendanceResolvers,
     FarmVisitsResolvers,
     FVQAsResolvers,
+    TrainingModulesResolvers
   ],
   subscriptions: { path: "/subscriptions", onConnect: () => pubSub },
   csrfPrevention: true,
