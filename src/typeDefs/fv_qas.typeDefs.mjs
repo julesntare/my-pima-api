@@ -40,7 +40,8 @@ const FVQAsTypeDefs = gql`
   enum Status {
     not_verified
     approved
-    rejected
+    invalid
+    unclear
   }
 
   enum FieldNames {
