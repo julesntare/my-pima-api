@@ -295,6 +295,7 @@ const UsersResolvers = {
             user_email,
             mobile_no,
             role_id,
+            account_status,
           },
           {
             where: { user_id },
