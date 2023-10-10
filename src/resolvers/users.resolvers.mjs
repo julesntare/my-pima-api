@@ -232,6 +232,13 @@ const UsersResolvers = {
           role_id,
         });
 
+        // get role info
+        const userRole = await Roles.findOne({
+          where: { role_id },
+        });
+
+        userCreated.role = userRole;
+
         return {
           message: "User added successfully",
           status: 200,
@@ -298,6 +305,13 @@ const UsersResolvers = {
         const updatedUser = await Users.findOne({
           where: { user_id },
         });
+
+        // get role info
+        const userRole = await Roles.findOne({
+          where: { role_id },
+        });
+
+        updatedUser.role = userRole;
 
         return {
           message: "User updated successfully",
