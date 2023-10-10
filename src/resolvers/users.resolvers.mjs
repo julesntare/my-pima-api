@@ -294,9 +294,15 @@ const UsersResolvers = {
           }
         );
 
+        // get updated user
+        const updatedUser = await Users.findOne({
+          where: { user_id },
+        });
+
         return {
           message: "User updated successfully",
           status: 200,
+          user: updatedUser,
         };
       } catch (err) {
         console.error(err);
