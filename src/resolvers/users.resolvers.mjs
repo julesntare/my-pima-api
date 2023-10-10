@@ -248,7 +248,7 @@ const UsersResolvers = {
 
     updateUser: async (
       _,
-      { user_id, user_name, user_email, mobile_no, role_id }
+      { user_id, user_name, user_email, mobile_no, role_id, account_status }
     ) => {
       // check if user exists
       const user = await Users.findOne({
@@ -279,6 +279,7 @@ const UsersResolvers = {
       user_email = user_email || user.user_email;
       mobile_no = mobile_no || user.mobile_no;
       role_id = role_id || user.role_id;
+      account_status = account_status || user.account_status;
 
       try {
         await Users.update(

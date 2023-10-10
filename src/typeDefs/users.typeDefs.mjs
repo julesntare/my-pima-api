@@ -42,6 +42,7 @@ const usersTypeDefs = gql`
       user_email: String
       mobile_no: String
       role_id: ID
+      account_status: String
     ): UserResponse
 
     forgotPassword(user_email: String!): UserResponse
