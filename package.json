@@ -28,7 +28,7 @@
     "express": "^4.21.0",
     "express-session": "^1.17.3",
     "google-auth-library": "^8.8.0",
-    "graphql": "^16.7.1",
+    "graphql": "^16.9.0",
     "graphql-redis-subscriptions": "^2.6.0",
     "graphql-scalars": "^1.22.1",
     "graphql-upload": "^16.0.2",
